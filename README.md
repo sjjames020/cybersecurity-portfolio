@@ -38,7 +38,7 @@ Each project includes a description, steps taken, outcome, and skills used.
 - **Outcome:** Secured sensitive files, removed risky default permissions, and created a repeatable process for checking vulnerabilities.  
 - **Skills:** Linux CLI, File Permissions, System Hardening, Security Controls  
 
-### [Vulnerability Scanning (TryHackMe)]()
+### [Vulnerability Scanning (TryHackMe)](https://sjjames020.github.io/cybersecurity-portfolio/openvas_portfolio.html)
 - **Scenario:** Conducted a vulnerability scan to assess risks in a simulated network.  
 - **Steps Taken:** Used Nmap to enumerate open ports and services, interpreted scanner results, and mapped findings to potential threats.  
 - **Outcome:** Prioritized vulnerabilities based on likelihood and impact, demonstrating basic risk assessment workflow.  
