@@ -32,13 +32,13 @@ Each project includes a description, steps taken, outcome, and skills used.
 - **Outcome:** Identified patterns of repeated failed logins and documented findings in an incident-style report.  
 - **Skills:** SQL, Log Analysis, Incident Reporting  
 
-### [Linux Permissions Hardening]([./projects/linux-permissions.html](https://docs.google.com/document/d/1NbwXyVAQH9ElOuip7iEDpB9xinKAzcZu3MgrYT9ppyo/edit?usp=sharing))
+### [Linux Permissions Hardening](https://docs.google.com/document/d/1NbwXyVAQH9ElOuip7iEDpB9xinKAzcZu3MgrYT9ppyo/edit?usp=sharing))
 - **Scenario:** Practiced enforcing least privilege in a Linux environment to prevent unauthorized access.  
 - **Steps Taken:** Configured file permissions with `chmod` and `chown`, reviewed hidden directories, and interpreted 10-character permission strings.  
 - **Outcome:** Secured sensitive files, removed risky default permissions, and created a repeatable process for checking vulnerabilities.  
 - **Skills:** Linux CLI, File Permissions, System Hardening, Security Controls  
 
-### [Vulnerability Scanning (TryHackMe)](./projects/vuln-scanning.html)
+### [Vulnerability Scanning (TryHackMe)](openvas_portfolio.html)
 - **Scenario:** Conducted a vulnerability scan to assess risks in a simulated network.  
 - **Steps Taken:** Used Nmap to enumerate open ports and services, interpreted scanner results, and mapped findings to potential threats.  
 - **Outcome:** Prioritized vulnerabilities based on likelihood and impact, demonstrating basic risk assessment workflow.  
