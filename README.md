@@ -41,13 +41,13 @@ Each project includes a description, steps taken, outcome, and skills used.
 ### [Vulnerability Scanning (TryHackMe)](https://sjjames020.github.io/cybersecurity-portfolio/openvas_portfolio.html)
 What I Did:
 
-Deployed OpenVAS in Docker container on Ubuntu Linux
-Configured vulnerability scan targeting local network (127.0.0.1/172.17.0.1)
-Executed comprehensive scan - completed in 8 minutes, 27 seconds
-Identified 26 vulnerabilities including 1 critical CVSS 10.0 finding
-Analyzed critical flaw - default credentials (admin:admin) on management interface
-Generated professional reports with risk assessments and remediation guidance
-Documented complete workflow from setup to vulnerability analysis
+- Deployed OpenVAS in Docker container on Ubuntu Linux
+- Configured vulnerability scan targeting local network (127.0.0.1/172.17.0.1)
+- Executed comprehensive scan - completed in 8 minutes, 27 seconds
+- Identified 26 vulnerabilities including 1 critical CVSS 10.0 finding
+- Analyzed critical flaw - default credentials (admin:admin) on management interface
+- Generated professional reports with risk assessments and remediation guidance
+- Documented complete workflow from setup to vulnerability analysis
 
 Results:
 
