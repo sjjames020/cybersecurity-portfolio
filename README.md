@@ -39,10 +39,23 @@ Each project includes a description, steps taken, outcome, and skills used.
 - **Skills:** Linux CLI, File Permissions, System Hardening, Security Controls  
 
 ### [Vulnerability Scanning (TryHackMe)](https://sjjames020.github.io/cybersecurity-portfolio/openvas_portfolio.html)
-- **Scenario:** Conducted a vulnerability scan to assess risks in a simulated network.  
-- **Steps Taken:** Used Nmap to enumerate open ports and services, interpreted scanner results, and mapped findings to potential threats.  
-- **Outcome:** Prioritized vulnerabilities based on likelihood and impact, demonstrating basic risk assessment workflow.  
-- **Skills:** Nmap, Vulnerability Scanning, Networking Fundamentals, Risk Management  
+What I Did:
+
+Deployed OpenVAS in Docker container on Ubuntu Linux
+Configured vulnerability scan targeting local network (127.0.0.1/172.17.0.1)
+Executed comprehensive scan - completed in 8 minutes, 27 seconds
+Identified 26 vulnerabilities including 1 critical CVSS 10.0 finding
+Analyzed critical flaw - default credentials (admin:admin) on management interface
+Generated professional reports with risk assessments and remediation guidance
+Documented complete workflow from setup to vulnerability analysis
+
+Results:
+
+26 total findings (1 Critical, 1 Medium, 24 Low)
+Critical: Default credentials vulnerability allowing full system access
+Services scanned: SSH, HTTP, HTTPS
+
+Tools: OpenVAS, Docker, Ubuntu Linux
 
 ---
 
