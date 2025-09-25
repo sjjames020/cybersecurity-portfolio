@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenVAS Lab - Cybersecurity Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #e4e4e7;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: #a1a1aa;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 3rem;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #e4e4e7;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #71717a;
+            font-size: 0.9rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* Lab Section */
+        .lab-section {
+            padding: 6rem 0;
+            background: #0a0a0a;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Screenshot Grid */
+        .screenshots-grid {
+            display: grid;
+            gap: 3rem;
+            margin-bottom: 6rem;
+        }
+
+        .screenshot-item {
+            background: rgba(24, 24, 27, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .screenshot-item:hover {
+            transform: translateY(-8px);
+            border-color: rgba(120, 119, 198, 0.3);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .screenshot-header {
+            padding: 2rem 2rem 0;
+        }
+
+        .screenshot-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #f4f4f5;
+        }
+
+        .screenshot-subtitle {
+            color: #a1a1aa;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .screenshot-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            margin: 0 2rem 2rem;
+            width: calc(100% - 4rem);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .screenshot-details {
+            padding: 0 2rem 2rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            background: rgba(39, 39, 42, 0.5);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid #7c7c8a;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: #a1a1aa;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #f4f4f5;
+        }
+
+        .vulnerability-high { border-left-color: #ef4444; }
+        .vulnerability-medium { border-left-color: #f59e0b; }
+        .vulnerability-low { border-left-color: #10b981; }
+
+        /* Key Findings */
+        .key-findings {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+        }
+
+        .key-findings h4 {
+            color: #fca5a5;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .finding-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 0.75rem 0;
+            border-left: 3px solid #ef4444;
+        }
+
+        /* Statistics */
+        .stats-section {
+            background: linear-gradient(135deg, #18181b 0%, #27272a 100%);
+            padding: 4rem 0;
+            margin: 4rem 0;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #a1a1aa;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.9rem;
+        }
+
+        /* Command Line Display */
+        .terminal {
+            background: #1c1c1c;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+            margin-right: 1rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #10b981; }
+
+        .terminal-title {
+            color: #a1a1aa;
+            font-size: 0.8rem;
+        }
+
+        .command-line {
+            margin: 0.5rem 0;
+        }
+
+        .prompt { color: #10b981; }
+        .command { color: #f4f4f5; }
+        .error { color: #ef4444; }
+        .output { color: #a1a1aa; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .hero {
+                min-height: 80vh;
+                text-align: center;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .stat-item {
+                padding: 1rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Loading animation for images */
+        .screenshot-image {
+            opacity: 0;
+            animation: fadeIn 0.6s ease-forward forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>OpenVAS Lab</h1>
+                <p class="subtitle">Professional Vulnerability Assessment & Security Analysis</p>
+                <div class="tech-badges">
+                    <span class="badge">OpenVAS</span>
+                    <span class="badge">Greenbone Security Assistant</span>
+                    <span class="badge">Docker</span>
+                    <span class="badge">Ubuntu Linux</span>
+                    <span class="badge">CVSS Analysis</span>
+                    <span class="badge">Network Security</span>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            ↓ Scroll to explore
+        </div>
+    </section>
+
+    <!-- Lab Results Section -->
+    <section class="lab-section">
+        <div class="container">
+            <h2 class="section-title">Vulnerability Assessment Workflow</h2>
+
+            <!-- Statistics Overview -->
+            <div class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">26</div>
+                        <div class="stat-label">Vulnerabilities Found</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">10.0</div>
+                        <div class="stat-label">Max CVSS Score</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">8:27</div>
+                        <div class="stat-label">Scan Duration</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">Critical Finding</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screenshots Grid -->
+            <div class="screenshots-grid">
+                
+                <!-- Screenshot 1: Task Configuration -->
+                <div class="screenshot-item">
+                    <div class="screenshot-header">
+                        <h3 class="screenshot-title">Initial Task Configuration</h3>
+                        <p class="screenshot-subtitle">Setting up "My First Task" with OpenVAS Default scanner configuration</p>
+                    </div>
+                    
+                    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=" 
+                         alt="OpenVAS Task Configuration Screenshot" 
+                         class="screenshot-image"
+                         style="content: url('data:image/svg+xml;charset=utf-8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"800\" viewBox=\"0 0 1200 800\"><rect width=\"100%\" height=\"100%\" fill=\"%23f8f9fa\"/><text x=\"50%\" y=\"50%\" font-family=\"Inter, sans-serif\" font-size=\"24\" fill=\"%236c757d\" text-anchor=\"middle\" dy=\".3em\">OpenVAS Task Configuration</text><text x=\"50%\" y=\"60%\" font-family=\"Inter, sans-serif\" font-size=\"16\" fill=\"%236c757d\" text-anchor=\"middle\" dy=\".3em\">Screenshot will be displayed here</text></svg>');">
+                    
+                    <div class="screenshot-details">
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">Task Name</div>
+                                <div class="detail-value">My First Task</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Scanner</div>
+                                <div class="detail-value">OpenVAS Default</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Configuration</div>
+                                <div class="detail-value">Full and fast</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">QoD Threshold</div>
+                                <div class="detail-value">70%</div>
+                            </div>
+                        </div>
+                        <p>Initial vulnerability assessment task configuration showing proper setup for comprehensive network scanning with OpenVAS Default scanner using "Full and fast" configuration mode.</p>
+                    </div>
+                </div>
+
+                <!-- Screenshot 2: Scan Completion -->
+                <div class="screenshot-item">
+                    <div class="screenshot-header">
+                        <h3 class="screenshot-title">Scan Execution Complete</h3>
+                        <p class="screenshot-subtitle">Successful completion of vulnerability scan with detailed metrics</p>
+                    </div>
+                    
+                    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=" 
+                         alt="OpenVAS Scan Completion Screenshot" 
+                         class="screenshot-image"
+                         style="content: url('data:image/svg+xml;charset=utf-8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"800\" viewBox=\"0 0 1200 800\"><rect width=\"100%\" height=\"100%\" fill=\"%23f8f9fa\"/><text x=\"50%\" y=\"50%\" font-family=\"Inter, sans-serif\" font-size=\"24\" fill=\"%236c757d\" text-anchor=\"middle\" dy=\".3em\">Scan Execution Complete</text><text x=\"50%\" y=\"60%\" font-family=\"Inter, sans-serif\" font-size=\"16\" fill=\"%236c757d\" text-anchor=\"middle\" dy=\".3em\">Screenshot will be displayed here</text></svg>');">
+                    
+                    <div class="screenshot-details">
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">Status</div>
+                                <div class="detail-value">Done</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Duration</div>
+                                <div class="detail-value">8 minutes 27 seconds</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Results</div>
+                                <div class="detail-value">26 findings</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Reports</div>
+                                <div class="detail-value">1 generated</div>
+                            </div>
+                        </div>
+                        <p>Scan completed successfully in under 9 minutes, generating 26 vulnerability findings across the target network infrastructure. The efficient execution demonstrates optimized scanning parameters.</p>
+                    </div>
+                </div>
+
+                <!-- Screenshot 3: Critical Vulnerability -->
+                <div class="screenshot-item">
+                    <div class="screenshot-header">
+                        <h3 class="screenshot-title">Critical Security Finding</h3>
+                        <p class="screenshot-subtitle">CVSS 10.0 - Default credentials vulnerability analysis</p>
+                    </div>
+                    
+                    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=" 
+                         alt="Critical Vulnerability Details Screenshot" 
+                         class="screenshot-image"
+                         style="content: url('data:image/svg+xml;charset=utf-8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"800\" viewBox=\"0 0 1200 800\"><rect width=\"100%\" height=\"100%\" fill=\"%23fee2e2\"/><rect x=\"20\" y=\"20\" width=\"1160\" height=\"100\" fill=\"%23dc2626\" rx=\"8\"/><text x=\"60\" y=\"80\" font-family=\"Inter, sans-serif\" font-size=\"20\" fill=\"white\" font-weight=\"bold\">High (CVSS: 10.0)</text><text x=\"900\" y=\"80\" font-family=\"Inter, sans-serif\" font-size=\"16\" fill=\"white\">9390/tcp</text><text x=\"60\" y=\"150\" font-family=\"Inter, sans-serif\" font-size=\"16\" fill=\"%23374151\">OpenVAS / Greenbone Vulnerability Manager Default Credentials</text><text x=\"60\" y=\"200\" font-family=\"Inter, sans-serif\" font-size=\"14\" fill=\"%23374151\" font-weight=\"bold\">Summary</text><text x=\"60\" y=\"230\" font-family=\"Inter, sans-serif\" font-size=\"12\" fill=\"%23374151\">The remote OpenVAS / Greenbone Vulnerability Manager is installed/configured</text><text x=\"60\" y=\"250\" font-family=\"Inter, sans-serif\" font-size=\"12\" fill=\"%23374151\">in a way that it has account(s) with default passwords enabled.</text><text x=\"60\" y=\"300\" font-family=\"Inter, sans-serif\" font-size=\"14\" fill=\"%23374151\" font-weight=\"bold\">Impact</text><text x=\"60\" y=\"330\" font-family=\"Inter, sans-serif\" font-size=\"12\" fill=\"%23374151\">This issue may be exploited by a remote attacker to gain access</text><text x=\"60\" y=\"350\" font-family=\"Inter, sans-serif\" font-size=\"12\" fill=\"%23374151\">to sensitive information or modify system configuration.</text></svg>');">
+                    
+                    <div class="screenshot-details">
+                        <div class="key-findings">
+                            <h4>🚨 Maximum Risk Vulnerability</h4>
+                            <div class="finding-item vulnerability-high">
+                                <strong>Vulnerability:</strong> Default Credentials (admin:admin)<br>
+                                <strong>CVSS Score:</strong> 10.0 (Critical)<br>
+                                <strong>Port:</strong> 9390/tcp<br>
+                                <strong>Risk:</strong> Complete system compromise possible
+                            </div>
+                        </div>
+                        <div class="detail-grid">
+                            <div class="detail-item vulnerability-high">
+                                <div class="detail-label">Attack Vector</div>
+                                <div class="detail-value">Remote (OMP/GMP)</div>
+                            </div>
+                            <div class="detail-item vulnerability-high">
+                                <div class="detail-label">Authentication</div>
+                                <div class="detail-value">None Required</div>
+                            </div>
+                            <div class="detail-item vulnerability-high">
+                                <div class="detail-label">Impact</div>
+                                <div class="detail-value">Complete Access</div>
+                            </div>
+                            <div class="detail-item vulnerability-high">
+                                <div class="detail-label">Solution Type</div>
+                                <div class="detail-value">Workaround</div>
+                            </div>
+                        </div>
+                        <p><strong>Remediation:</strong> Immediately change default passwords to complex, unique credentials. Implement multi-factor authentication and restrict network access to management interfaces.</p>
+                    </div>
+                </div>
+
+                <!-- Screenshot 4: Results Dashboard -->
+                <div class="screenshot-item">
+                    <div class="screenshot-header">
+                        <h3 class="screenshot-title">Comprehensive Results Analysis</h3>
+                        <p class="screenshot-subtitle">Vulnerability distribution and risk assessment dashboard</p>
+                    </div>
+                    
+                    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=" 
+                         alt="OpenVAS Results Dashboard Screenshot" 
+                         class="screenshot-image"
+                         style="content: url('data:image/svg+xml;charset=utf-8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"800\" viewBox=\"0 0 1200 800\"><rect width=\"100%\" height=\"100%\" fill=\"%23f8f9fa\"/><circle cx=\"200\" cy=\"300\" r=\"80\" fill=\"none\" stroke=\"%23e5e7eb\" stroke-width=\"20\"/><circle cx=\"200\" cy=\"300\" r=\"80\" fill=\"none\" stroke=\"%23f59e0b\" stroke-width=\"20\" stroke-dasharray=\"25 470\" transform=\"rotate(-90 200 300)\"/><circle cx=\"200\" cy=\"300\" r=\"80\" fill=\"none\" stroke=\"%2310b981\" stroke-width=\"20\" stroke-dasharray=\"475 25\" stroke-dashoffset=\"25\" transform=\"rotate(-90 200 300)\"/><text x=\"200\" y=\"300\" font-family=\"Inter, sans-serif\" font-size=\"32\" fill=\"%23374151\" text-anchor=\"middle\" dy=\".3em\" font-weight=\"bold\">24</text><text x=\"200\" y=\"400\" font-family=\"Inter, sans-serif\" font-size=\"14\" fill=\"%236b7280\" text-anchor=\"middle\">Low: 24  Medium: 1</text><rect x=\"400\" y=\"200\" width=\"750\" height=\"400\" fill=\"%23f3f4f6\" rx=\"8\"/><text x=\"420\" y=\"230\" font-family=\"Inter, sans-serif\" font-size=\"16\" fill=\"%23374151\" font-weight=\"bold\">Vulnerability</text><text x=\"650\" y=\"230\" font-family=\"Inter, sans-serif\" font-size=\"16\" fill=\"%23374151\" font-weight=\"bold\">Severity</text><text x=\"750\" y=\"230\" font-family=\"Inter, sans-serif\" font-size=\"16\" fill=\"%23374151\" font-weight=\"bold\">Host</text><text x=\"850\" y=\"230\" font-family=\"Inter, sans-serif\" font-size=\"16\" fill=\"%23374151\" font-weight=\"bold\">Port</text><rect x=\"420\" y=\"250\" width=\"710\" height=\"30\" fill=\"%23fee2e2\"/><text x=\"430\" y=\"270\" font-family=\"Inter, sans-serif\" font-size=\"12\" fill=\"%23dc2626\">SSH Protocol Versions Supported</text><text x=\"670\" y=\"270\" font-family=\"Inter, sans-serif\" font-size=\"12\" fill=\"%23dc2626\">0.0 (Log)</text><text x=\"760\" y=\"270\" font-family=\"Inter, sans-serif\" font-size=\"12\" fill=\"%232563eb\">172.17.0.1</text><text x=\"860\" y=\"270\" font-family=\"Inter, sans-serif\" font-size=\"12\" fill=\"%23374151\">22/tcp</text></svg>');">
+                    
+                    <div class="screenshot-details">
+                        <div class="detail-grid">
+                            <div class="detail-item vulnerability-low">
+                                <div class="detail-label">Low Risk</div>
+                                <div class="detail-value">24 findings</div>
+                            </div>
+                            <div class="detail-item vulnerability-medium">
+                                <div class="detail-label">Medium Risk</div>
+                                <div class="detail-value">1 finding</div>
+                            </div>
+                            <div class="detail-item vulnerability-high">
+                                <div class="detail-label">High Risk</div>
+                                <div class="detail-value">1 finding</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="
