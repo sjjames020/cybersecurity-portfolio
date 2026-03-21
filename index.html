@@ -2,104 +2,1014 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sonobia James | Cybersecurity Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SJ | Cybersecurity Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; margin: 2rem; background: #f9f9f9; color: #333; }
-    h1, h2 { color: #2c3e50; }
-    section { margin-bottom: 2rem; }
-    .project { background: white; padding: 1rem; margin-bottom: 1rem; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    a { color: #2980b9; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    :root {
+      --pink: #ff2d78;
+      --purple: #b400ff;
+      --cyan: #00f5ff;
+      --bg: #050508;
+      --bg2: #0c0814;
+      --text: #f0e6ff;
+      --dim: #7a6a8e;
+      --card-bg: rgba(15, 8, 25, 0.9);
+      --card-border: rgba(180, 0, 255, 0.2);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Share Tech Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      background-image:
+        linear-gradient(rgba(180, 0, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(180, 0, 255, 0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* CRT scanlines */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.04) 2px,
+        rgba(0, 0, 0, 0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* ==================== BOOT SCREEN ==================== */
+    #boot-screen {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem;
+      transition: opacity 0.8s ease;
+    }
+
+    #boot-screen.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .boot-line {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+      opacity: 0;
+      animation: appear 0.05s forwards;
+    }
+
+    .boot-line.pink  { color: var(--pink); }
+    .boot-line.cyan  { color: var(--cyan); }
+    .boot-line.purple { color: var(--purple); }
+    .boot-line.white { color: #fff; font-size: 1.3rem; margin-top: 0.5rem; }
+
+    @keyframes appear { to { opacity: 1; } }
+
+    .boot-cursor {
+      display: inline-block;
+      width: 10px; height: 1.1em;
+      background: var(--pink);
+      vertical-align: text-bottom;
+      animation: blink 0.7s infinite;
+    }
+
+    /* ==================== NAV ==================== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(5, 5, 8, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 45, 120, 0.18);
+    }
+
+    .nav-logo {
+      font-family: 'VT323', monospace;
+      font-size: 2rem;
+      color: var(--pink);
+      text-shadow: 0 0 18px var(--pink), 0 0 40px rgba(255,45,120,0.4);
+      letter-spacing: 0.1em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.75rem;
+      color: var(--dim);
+      text-decoration: none;
+      letter-spacing: 0.2em;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--pink);
+      text-shadow: 0 0 10px var(--pink);
+    }
+
+    /* ==================== HERO ==================== */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #matrix-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      opacity: 0.35;
+    }
+
+    /* Vignette */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(5,5,8,0.85) 100%);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .hero-pre {
+      font-size: 0.85rem;
+      color: var(--cyan);
+      letter-spacing: 0.4em;
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+    }
+
+    .hero-name {
+      font-family: 'VT323', monospace;
+      font-size: clamp(4.5rem, 13vw, 10rem);
+      line-height: 1;
+      color: #fff;
+      letter-spacing: 0.06em;
+      text-shadow:
+        0 0 20px var(--pink),
+        0 0 50px var(--pink),
+        0 0 100px rgba(255, 45, 120, 0.4);
+      animation: glitch 5s infinite;
+      margin-bottom: 0.4rem;
+    }
+
+    @keyframes glitch {
+      0%, 88%, 100% {
+        text-shadow: 0 0 20px var(--pink), 0 0 50px var(--pink), 0 0 100px rgba(255,45,120,0.4);
+        transform: translateX(0);
+        clip-path: none;
+      }
+      89% {
+        text-shadow: -4px 0 var(--cyan), 4px 0 var(--purple);
+        transform: translateX(4px);
+      }
+      90% {
+        text-shadow: 4px 0 var(--cyan), -4px 0 var(--purple);
+        transform: translateX(-4px);
+      }
+      91% {
+        text-shadow: 0 0 20px var(--pink), 0 0 50px var(--pink);
+        transform: translateX(0);
+      }
+      93% {
+        text-shadow: -3px 0 var(--pink), 3px 0 var(--cyan);
+        transform: translateX(2px);
+      }
+      94% {
+        text-shadow: 0 0 20px var(--pink), 0 0 50px var(--pink);
+        transform: translateX(0);
+      }
+    }
+
+    .hero-aka {
+      font-family: 'VT323', monospace;
+      font-size: 2.2rem;
+      color: var(--pink);
+      letter-spacing: 0.4em;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 15px rgba(255,45,120,0.6);
+    }
+
+    .hero-tagline {
+      font-size: 0.95rem;
+      color: var(--dim);
+      margin-bottom: 2.5rem;
+      min-height: 1.5em;
+      letter-spacing: 0.05em;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px; height: 1em;
+      background: var(--pink);
+      vertical-align: text-bottom;
+      animation: blink 0.7s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .badge {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      padding: 0.4rem 1rem;
+      border-radius: 2px;
+      border: 1px solid;
+      transition: all 0.3s;
+      cursor: default;
+    }
+
+    .badge-pink {
+      color: var(--pink);
+      border-color: rgba(255, 45, 120, 0.35);
+      background: rgba(255, 45, 120, 0.07);
+    }
+    .badge-pink:hover {
+      background: rgba(255, 45, 120, 0.18);
+      box-shadow: 0 0 16px rgba(255, 45, 120, 0.25);
+    }
+
+    .badge-purple {
+      color: #d070ff;
+      border-color: rgba(180, 0, 255, 0.35);
+      background: rgba(180, 0, 255, 0.07);
+    }
+    .badge-purple:hover {
+      background: rgba(180, 0, 255, 0.18);
+      box-shadow: 0 0 16px rgba(180, 0, 255, 0.25);
+    }
+
+    .badge-cyan {
+      color: var(--cyan);
+      border-color: rgba(0, 245, 255, 0.35);
+      background: rgba(0, 245, 255, 0.07);
+    }
+    .badge-cyan:hover {
+      background: rgba(0, 245, 255, 0.18);
+      box-shadow: 0 0 16px rgba(0, 245, 255, 0.25);
+    }
+
+    .scroll-down {
+      font-size: 0.75rem;
+      color: var(--dim);
+      letter-spacing: 0.3em;
+      animation: float 2.5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+
+    /* ==================== SECTIONS ==================== */
+    .section-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      color: var(--pink);
+      letter-spacing: 0.35em;
+      margin-bottom: 0.5rem;
+      opacity: 0.9;
+    }
+
+    .section-title {
+      font-family: 'VT323', monospace;
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      color: var(--text);
+      text-shadow: 0 0 20px rgba(180, 0, 255, 0.4);
+      margin-bottom: 3rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(180, 0, 255, 0.15);
+    }
+
+    /* ==================== ABOUT / DOSSIER ==================== */
+    .dossier {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    .dossier-meta {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 1.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dossier-meta::after {
+      content: 'CLASSIFIED';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(-28deg);
+      font-family: 'VT323', monospace;
+      font-size: 3.5rem;
+      color: rgba(255, 45, 120, 0.06);
+      letter-spacing: 0.2em;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .meta-row { margin-bottom: 1.3rem; }
+
+    .meta-label {
+      font-size: 0.68rem;
+      color: var(--pink);
+      letter-spacing: 0.22em;
+      margin-bottom: 0.25rem;
+    }
+
+    .meta-value {
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .status-badge {
+      display: inline-block;
+      background: rgba(0, 245, 255, 0.08);
+      border: 1px solid rgba(0, 245, 255, 0.35);
+      color: var(--cyan);
+      font-size: 0.7rem;
+      padding: 0.25rem 0.7rem;
+      letter-spacing: 0.1em;
+    }
+
+    .dossier-bio {
+      font-size: 0.92rem;
+      line-height: 1.9;
+      color: #baaed0;
+    }
+
+    .dossier-bio p { margin-bottom: 1.25rem; }
+
+    .hi-pink { color: var(--pink); }
+    .hi-cyan { color: var(--cyan); }
+    .hi-purple { color: #c878ff; text-shadow: 0 0 8px rgba(180,0,255,0.35); }
+
+    /* ==================== CERTS ==================== */
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .cert-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .cert-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: linear-gradient(to bottom, var(--pink), var(--purple));
+    }
+
+    .cert-card:hover {
+      border-color: rgba(255, 45, 120, 0.4);
+      box-shadow: 0 0 30px rgba(255, 45, 120, 0.08), 0 0 60px rgba(180, 0, 255, 0.05);
+      transform: translateY(-4px);
+    }
+
+    .cert-status {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      margin-bottom: 0.75rem;
+    }
+
+    .cert-status.ok { color: #00ff88; }
+    .cert-status.wip { color: var(--cyan); }
+
+    .cert-name {
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+      line-height: 1.4;
+    }
+
+    .cert-year {
+      font-size: 0.78rem;
+      color: var(--dim);
+    }
+
+    /* ==================== CASE FILES ==================== */
+    .cases-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 1.75rem;
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .case-card:hover {
+      border-color: rgba(180, 0, 255, 0.45);
+      box-shadow: 0 0 30px rgba(180, 0, 255, 0.1), 0 0 60px rgba(255, 45, 120, 0.04);
+      transform: translateY(-5px);
+    }
+
+    .case-status-badge {
+      position: absolute;
+      top: 1.75rem; right: 1.75rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+    }
+    .case-status-badge.closed { color: #00ff88; }
+    .case-status-badge.active { color: var(--cyan); }
+
+    .case-number {
+      font-size: 0.68rem;
+      color: var(--pink);
+      letter-spacing: 0.3em;
+      margin-bottom: 0.75rem;
+    }
+
+    .case-title {
+      font-family: 'VT323', monospace;
+      font-size: 1.7rem;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      line-height: 1.15;
+      padding-right: 5rem;
+    }
+
+    .case-desc {
+      font-size: 0.83rem;
+      color: #a090b8;
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+    }
+
+    .case-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .skill-tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 2px;
+      background: rgba(180, 0, 255, 0.08);
+      border: 1px solid rgba(180, 0, 255, 0.22);
+      color: #c080e8;
+    }
+
+    .case-link {
+      display: inline-block;
+      font-size: 0.78rem;
+      color: var(--pink);
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255, 45, 120, 0.3);
+      padding-bottom: 2px;
+      transition: all 0.3s;
+    }
+
+    .case-link:hover {
+      color: #fff;
+      border-color: var(--pink);
+      text-shadow: 0 0 12px var(--pink);
+    }
+
+    .case-img {
+      width: 100%;
+      border-radius: 4px;
+      margin-top: 1rem;
+      opacity: 0.88;
+      border: 1px solid rgba(180,0,255,0.15);
+    }
+
+    .coming-soon {
+      font-size: 0.72rem;
+      color: var(--dim);
+      margin-top: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* ==================== TEACHING ==================== */
+    .pivot-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 2.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pivot-block::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--pink), var(--purple), var(--cyan));
+    }
+
+    .pivot-text {
+      font-size: 0.92rem;
+      line-height: 1.9;
+      color: #baaed0;
+      margin-bottom: 1.75rem;
+    }
+
+    .pivot-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    /* ==================== CONTACT / TERMINAL ==================== */
+    .terminal-box {
+      background: #040208;
+      border: 1px solid rgba(255, 45, 120, 0.25);
+      border-radius: 4px;
+      padding: 2rem;
+      font-family: 'Share Tech Mono', monospace;
+      box-shadow: 0 0 40px rgba(255, 45, 120, 0.06);
+    }
+
+    .term-topbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 45, 120, 0.12);
+    }
+
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dot.r { background: #ef4444; }
+    .dot.y { background: #f59e0b; }
+    .dot.g { background: #22c55e; }
+
+    .term-title {
+      color: var(--dim);
+      font-size: 0.78rem;
+      margin-left: 6px;
+    }
+
+    .t-line { margin-bottom: 0.6rem; font-size: 0.88rem; }
+    .t-prompt { color: var(--pink); }
+    .t-cmd { color: var(--text); }
+    .t-out { color: #9080a8; padding-left: 1.5rem; }
+    .t-link { color: var(--cyan); text-decoration: none; transition: text-shadow 0.3s; }
+    .t-link:hover { text-shadow: 0 0 10px var(--cyan); }
+    .t-green { color: #00ff88; }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid rgba(180, 0, 255, 0.1);
+    }
+
+    .footer-name {
+      font-family: 'VT323', monospace;
+      font-size: 1.5rem;
+      color: var(--pink);
+      letter-spacing: 0.3em;
+      text-shadow: 0 0 12px rgba(255,45,120,0.4);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-sub {
+      font-size: 0.72rem;
+      color: rgba(122, 106, 142, 0.5);
+      letter-spacing: 0.1em;
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+      nav { padding: 0.85rem 1.25rem; }
+      .nav-links { gap: 1.2rem; }
+      .nav-links a { font-size: 0.68rem; letter-spacing: 0.12em; }
+      .dossier { grid-template-columns: 1fr; }
+      .case-title { padding-right: 0; }
+      #boot-screen { padding: 2rem; }
+    }
   </style>
 </head>
 <body>
 
-  <h1>👩🏽‍💻 Sonobia James (SJ)</h1>
-<p>Hi, I’m SJ 👋🏽
-I’m a computer science teacher who’s been slowly (but consistently) carving out my path into cybersecurity. I learn best by doing, so most of my work comes from hands-on labs, breaking things, fixing them, and trying again.
-I am a curious and enthusiastic security professional with a strong commitment to ethics. I thrive on solving problems in the ever-evolving security landscape, staying calm under pressure while using thoughtful analysis to identify vulnerabilities, mitigate risks, and strengthen organizational resilience.
-Right now Im studying for Security+, building Python projects, and spending way too much time inside terminal windows. My goal is to pass Sec+ by March.</p>
+  <!-- ==================== BOOT SCREEN ==================== -->
+  <div id="boot-screen">
+    <div class="boot-line pink"  style="animation-delay: 0.3s">$ INITIALIZING SECURE CONNECTION...</div>
+    <div class="boot-line cyan"  style="animation-delay: 1.0s">&gt; LOADING OPERATOR PROFILE...</div>
+    <div class="boot-line pink"  style="animation-delay: 1.7s">$ VERIFYING CREDENTIALS...</div>
+    <div class="boot-line purple" style="animation-delay: 2.4s">&gt; DECRYPTING CASE FILES...</div>
+    <div class="boot-line white" style="animation-delay: 3.1s">✓ ACCESS GRANTED. <span class="boot-cursor"></span></div>
+  </div>
 
-<ul>
-<p>Some things I’ve been playing with lately:</p>
-<li>password-cracking labs using Hashcat</li>
-<li>experimenting with hashing + randomness (Fisher-Yates shuffle, etc.)</li>
-<li> Python tools like a phishing URL detector + password generator</li>
-<li>vulnerability scanning and basic SOC-style documentation</li>
-<li>trying to understand why attacks work, not just how to stop them</li>
-</ul>
-
-I’m interested in roles where I can keep learning, keep building, and apply all this in the real world, whether that’s in security operations, analysis, or something adjacent.
-
-This is me learning out loud.
-This is me being serious about my future.
-Thanks for being here while I figure the rest out.</p>
-  <section>
-    <h2>📜 Certifications</h2>
-    <ul>
-      <li>Google Cybersecurity Professional Certificate: Completed (2026) </li>
-      <li>TryHackMe – Pre Security Certificate (2025)</li>
-      <li>TCM Security – Linux 100: Fundamentals (2025)</li>
-      <li> Plan to sit for CompTIA Security + 2026</li>
+  <!-- ==================== NAV ==================== -->
+  <nav>
+    <div class="nav-logo">SJ_</div>
+    <ul class="nav-links">
+      <li><a href="#about">PROFILE</a></li>
+      <li><a href="#certs">CLEARANCE</a></li>
+      <li><a href="#projects">CASE FILES</a></li>
+      <li><a href="#contact">COMMS</a></li>
     </ul>
-  </section>
+  </nav>
 
-  <section>
-    <h2>🛡️ Projects & Labs</h2>
-    <div class="project">
-<a href ='https://docs.google.com/document/d/13nXZuHCdwRNNbHf7VsFcP9h7ZU9eDzdYpXOUMgjl8G4/edit?usp=sharing'> View Here </a>
-      <h3>SQL Log Analysis: After-Hours Login Attempts</h3>
-      <p>Queried login data to detect failed attempts after business hours. Built an incident report summarizing suspicious activity.</p>
-      <p><strong>Skills:</strong> SQL, Log Analysis, Incident Reporting</p>
-    </div>
-    <div class="project">
-<a href ='https://docs.google.com/document/d/1NbwXyVAQH9ElOuip7iEDpB9xinKAzcZu3MgrYT9ppyo/edit?usp=sharing'> View Here </a>
-      <h3>Linux Permissions Hardening</h3>
-      <p>Configured user/file permissions in Linux to enforce least privilege. Documented vulnerabilities and fixes.</p>
-      <p><strong>Skills:</strong> Linux CLI, File Permissions, Security Controls</p>
-    </div>
-    <div class="project">
-      <a href="openvas_portfolio.html">View Here</a> 
-      <h3> Vulnerability Scanning (TryHackMe)</h3>
-      
-      <p>Performed network scans to identify open ports and misconfigurations. Mapped findings to potential threats and risks.</p>
-      <p><strong>Skills:</strong> Nmap, Vulnerability Assessment, Risk Management</p>
-    </div>
-  <div class="project">
-    <!-- <a href = "">View Here</a>  -->
-    <h3>🛡️ Phishing URL Detector (Python)</h3>
-    <p>A tool that analyzes URLs for common phishing patterns, suspicious keywords, and structural anomalies.
-Skills shown: string parsing, conditional logic, input validation, security fundamentals.
-Why it matters: Detecting malicious links is a core skill in SOC work and threat analysis.</p>
-<img src="photos/phishguard-gui.png" alt="Phishguard GUI screenshot"/>
-    </div>
-    <div class ="project"> 
-    <h3> 🔑 Password Generator (Python)</h3>
-      <p>A customizable password generator that creates secure, randomized passwords using Python’s random library and the Fisher–Yates shuffle to ensure strong entropy and unpredictability.
-Skills shown: loops, randomness, Fisher–Yates algorithm, functions, user input, secure-by-design thinking.
-Why it matters: Strong password hygiene and randomness are essential for identity, authentication, and access security.</p>
-    <h6>GUI coming soon...Screenshots will be added once the interface is complete.</h6>
-    </div>
-    <div class = "project">
-
-<h3>🧪 Hashing & Cracking Lab (Hashcat)</h3>
-      
-<p> Conducted hands-on password security research by hashing passwords with SHA-256 and testing their strength using Hashcat in a controlled environment.
-Skills shown: hashing algorithms, wordlists, brute-force/attack modes, GPU-accelerated cracking, security auditing.
-Why it matters: Understanding how attackers break weak credentials helps build stronger defenses, policies, and user education.</p>
+  <!-- ==================== HERO ==================== -->
+  <section id="hero">
+    <canvas id="matrix-canvas"></canvas>
+    <div class="hero-content">
+      <p class="hero-pre">&gt; OPERATOR PROFILE // ACTIVE</p>
+      <h1 class="hero-name">SONOBIA JAMES</h1>
+      <p class="hero-aka">[ aka SJ ]</p>
+      <p class="hero-tagline" id="typewriter"><span class="cursor"></span></p>
+      <div class="hero-badges">
+        <span class="badge badge-pink">CS TEACHER</span>
+        <span class="badge badge-purple">SECURITY STUDENT</span>
+        <span class="badge badge-cyan">PYTHON DEV</span>
+        <span class="badge badge-pink">THM CERTIFIED</span>
+        <span class="badge badge-purple">LINUX ENTHUSIAST</span>
+        <span class="badge badge-cyan">SEC+ CANDIDATE</span>
+      </div>
+      <p class="scroll-down">▼ &nbsp; SCROLL TO EXPLORE</p>
     </div>
   </section>
 
-  <section>
-    <h2>📚 Teaching → Cybersecurity Pivot</h2>
-    <p>My experience as a Computer Science teacher sharpened my ability to explain complex technical concepts, manage projects, and provide exceptional support—skills that directly strengthen my cybersecurity work.</p>
-  </section>
+  <!-- ==================== ABOUT ==================== -->
+  <div id="about" class="section-wrap">
+    <p class="section-label">&gt; SUBJECT FILE // 001</p>
+    <h2 class="section-title">OPERATOR DOSSIER</h2>
+    <div class="dossier">
 
-  <section>
-    <h2>📫 Contact</h2>
-    <p>Email: <a href="mailto:sjjames020@gmail.com">sjjames020@gmail.com</a></p>
-    <p>LinkedIn: <a href="www.linkedin.com/in/sonobia-james">www.linkedin.com/in/sonobia-james</a></p>
-  </section>
+      <div class="dossier-meta">
+        <div class="meta-row">
+          <div class="meta-label">DESIGNATION</div>
+          <div class="meta-value">Sonobia James</div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-label">CALLSIGN</div>
+          <div class="meta-value" style="color: var(--pink); text-shadow: 0 0 8px rgba(255,45,120,0.4)">SJ</div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-label">STATUS</div>
+          <div class="meta-value"><span class="status-badge">ACTIVE // OPEN TO OPPORTUNITIES</span></div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-label">CURRENT OBJECTIVE</div>
+          <div class="meta-value">CompTIA Security+ (SY0-701)</div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-label">SPECIALIZATION</div>
+          <div class="meta-value">Security Operations · Python · Linux</div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-label">BACKGROUND</div>
+          <div class="meta-value">Computer Science Education</div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-label">CLEARANCE LEVEL</div>
+          <div class="meta-value" style="color: #c878ff; text-shadow: 0 0 8px rgba(180,0,255,0.4)">ELEVATING ▲</div>
+        </div>
+      </div>
+
+      <div class="dossier-bio">
+        <p>Hi, I'm SJ. 👋🏽 I'm a <span class="hi-pink">computer science teacher</span> who's been slowly — but consistently — carving out my path into cybersecurity. I learn best by doing, so most of my work comes from <span class="hi-cyan">hands-on labs</span>, breaking things, fixing them, and trying again.</p>
+        <p>I'm a curious and enthusiastic security professional with a strong commitment to ethics. I thrive on solving problems in the ever-evolving security landscape, staying calm under pressure while using <span class="hi-purple">thoughtful analysis</span> to identify vulnerabilities, mitigate risks, and strengthen organizational resilience.</p>
+        <p>Right now I'm studying for <span class="hi-pink">Security+</span>, building Python projects, and spending way too much time inside terminal windows.</p>
+        <p>Some things I've been playing with lately:</p>
+        <p>
+          <span class="hi-cyan">/</span> password-cracking labs using Hashcat<br>
+          <span class="hi-cyan">/</span> experimenting with hashing + randomness (Fisher-Yates shuffle)<br>
+          <span class="hi-cyan">/</span> Python tools — phishing URL detector + password generator<br>
+          <span class="hi-cyan">/</span> vulnerability scanning and SOC-style documentation<br>
+          <span class="hi-cyan">/</span> trying to understand <em>why</em> attacks work, not just how to stop them
+        </p>
+        <p style="margin-top: 1.5rem; color: var(--dim); font-style: italic">
+          This is me learning out loud.<br>
+          This is me being serious about my future.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== CERTS ==================== -->
+  <div id="certs" class="section-wrap">
+    <p class="section-label">&gt; CREDENTIALS // 002</p>
+    <h2 class="section-title">VERIFIED CLEARANCES</h2>
+    <div class="certs-grid">
+
+      <div class="cert-card">
+        <div class="cert-status ok">✓ VERIFIED</div>
+        <div class="cert-name">Google Cybersecurity Professional Certificate</div>
+        <div class="cert-year">2026</div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-status ok">✓ VERIFIED</div>
+        <div class="cert-name">TryHackMe — Pre Security Certificate</div>
+        <div class="cert-year">2025</div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-status ok">✓ VERIFIED</div>
+        <div class="cert-name">TCM Security — Linux 100: Fundamentals</div>
+        <div class="cert-year">2025</div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-status wip">◈ IN PROGRESS</div>
+        <div class="cert-name">CompTIA Security+ (SY0-701)</div>
+        <div class="cert-year">Target: 2026</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== CASE FILES ==================== -->
+  <div id="projects" class="section-wrap">
+    <p class="section-label">&gt; CASE FILES // 003</p>
+    <h2 class="section-title">ACTIVE INVESTIGATIONS</h2>
+    <div class="cases-grid">
+
+      <div class="case-card">
+        <span class="case-status-badge closed">● CLOSED</span>
+        <div class="case-number">CASE // 001</div>
+        <div class="case-title">SQL LOG ANALYSIS: AFTER-HOURS LOGINS</div>
+        <div class="case-desc">Queried login data to detect failed attempts after business hours. Built an incident report summarizing suspicious activity patterns.</div>
+        <div class="case-skills">
+          <span class="skill-tag">SQL</span>
+          <span class="skill-tag">LOG ANALYSIS</span>
+          <span class="skill-tag">INCIDENT REPORTING</span>
+        </div>
+        <a href="https://docs.google.com/document/d/13nXZuHCdwRNNbHf7VsFcP9h7ZU9eDzdYpXOUMgjl8G4/edit?usp=sharing" target="_blank" class="case-link">VIEW REPORT →</a>
+      </div>
+
+      <div class="case-card">
+        <span class="case-status-badge closed">● CLOSED</span>
+        <div class="case-number">CASE // 002</div>
+        <div class="case-title">LINUX PERMISSIONS HARDENING</div>
+        <div class="case-desc">Configured user/file permissions in Linux to enforce least privilege. Documented vulnerabilities and the fixes applied.</div>
+        <div class="case-skills">
+          <span class="skill-tag">LINUX CLI</span>
+          <span class="skill-tag">FILE PERMISSIONS</span>
+          <span class="skill-tag">SECURITY CONTROLS</span>
+        </div>
+        <a href="https://docs.google.com/document/d/1NbwXyVAQH9ElOuip7iEDpB9xinKAzcZu3MgrYT9ppyo/edit?usp=sharing" target="_blank" class="case-link">VIEW REPORT →</a>
+      </div>
+
+      <div class="case-card">
+        <span class="case-status-badge closed">● CLOSED</span>
+        <div class="case-number">CASE // 003</div>
+        <div class="case-title">VULNERABILITY SCANNING — OPENVAS</div>
+        <div class="case-desc">Performed network scans to identify open ports and misconfigurations. CVSS 10.0 critical finding identified and documented.</div>
+        <div class="case-skills">
+          <span class="skill-tag">OPENVAS</span>
+          <span class="skill-tag">NMAP</span>
+          <span class="skill-tag">CVSS ANALYSIS</span>
+          <span class="skill-tag">RISK MANAGEMENT</span>
+        </div>
+        <a href="openvas_portfolio.html" class="case-link">VIEW CASE FILE →</a>
+      </div>
+
+      <div class="case-card">
+        <span class="case-status-badge active">◈ ACTIVE</span>
+        <div class="case-number">CASE // 004</div>
+        <div class="case-title">PHISHING URL DETECTOR — PYTHON</div>
+        <div class="case-desc">Analyzes URLs for common phishing patterns, suspicious keywords, and structural anomalies. Core SOC skill — detecting malicious links before they land.</div>
+        <div class="case-skills">
+          <span class="skill-tag">PYTHON</span>
+          <span class="skill-tag">STRING PARSING</span>
+          <span class="skill-tag">INPUT VALIDATION</span>
+          <span class="skill-tag">THREAT DETECTION</span>
+        </div>
+        <img src="photos/phishguard-gui.png" alt="Phishguard GUI screenshot" class="case-img">
+      </div>
+
+      <div class="case-card">
+        <span class="case-status-badge active">◈ ACTIVE</span>
+        <div class="case-number">CASE // 005</div>
+        <div class="case-title">PASSWORD GENERATOR — PYTHON</div>
+        <div class="case-desc">Customizable password generator using the Fisher–Yates shuffle for true randomness and strong entropy. Secure-by-design from the start.</div>
+        <div class="case-skills">
+          <span class="skill-tag">PYTHON</span>
+          <span class="skill-tag">FISHER-YATES</span>
+          <span class="skill-tag">CRYPTOGRAPHY</span>
+          <span class="skill-tag">AUTH SECURITY</span>
+        </div>
+        <p class="coming-soon">◈ GUI IN DEVELOPMENT — SCREENSHOTS COMING SOON</p>
+      </div>
+
+      <div class="case-card">
+        <span class="case-status-badge closed">● CLOSED</span>
+        <div class="case-number">CASE // 006</div>
+        <div class="case-title">HASHING &amp; CRACKING LAB — HASHCAT</div>
+        <div class="case-desc">Hashed passwords with SHA-256 and tested strength via Hashcat in a controlled environment. Understanding how attackers break credentials to build stronger defenses.</div>
+        <div class="case-skills">
+          <span class="skill-tag">HASHCAT</span>
+          <span class="skill-tag">SHA-256</span>
+          <span class="skill-tag">WORDLISTS</span>
+          <span class="skill-tag">SECURITY AUDITING</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== TEACHING PIVOT ==================== -->
+  <div id="background" class="section-wrap">
+    <p class="section-label">&gt; BACKGROUND INTEL // 004</p>
+    <h2 class="section-title">THE PIVOT</h2>
+    <div class="pivot-block">
+      <p class="pivot-text">My experience as a Computer Science teacher sharpened my ability to explain complex technical concepts clearly, manage high-stakes projects under pressure, and support people through difficult learning curves — skills that translate directly into cybersecurity. Teaching gave me a mindset: understand a system deeply enough to explain it to someone else. That same mindset drives how I approach every security challenge. I don't just want to stop attacks. I want to understand them.</p>
+      <div class="pivot-skills">
+        <span class="badge badge-pink">TECHNICAL COMMUNICATION</span>
+        <span class="badge badge-purple">PROJECT MANAGEMENT</span>
+        <span class="badge badge-cyan">CURRICULUM DESIGN</span>
+        <span class="badge badge-pink">MENTORSHIP</span>
+        <span class="badge badge-purple">PROBLEM SOLVING</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CONTACT ==================== -->
+  <div id="contact" class="section-wrap">
+    <p class="section-label">&gt; ESTABLISH COMMS // 005</p>
+    <h2 class="section-title">OPEN CHANNEL</h2>
+    <div class="terminal-box">
+      <div class="term-topbar">
+        <div class="dot r"></div>
+        <div class="dot y"></div>
+        <div class="dot g"></div>
+        <span class="term-title">sj@cybergirl:~$ secure-comms</span>
+      </div>
+
+      <div class="t-line"><span class="t-prompt">$</span> <span class="t-cmd">whoami</span></div>
+      <div class="t-line t-out">sonobia_james // SJ — cybersecurity student, CS teacher, perpetual learner</div>
+
+      <div class="t-line" style="margin-top:1rem"><span class="t-prompt">$</span> <span class="t-cmd">cat contact.txt</span></div>
+      <div class="t-line t-out">EMAIL    &nbsp;→ <a href="mailto:sjjames020@gmail.com" class="t-link">sjjames020@gmail.com</a></div>
+      <div class="t-line t-out">LINKEDIN &nbsp;→ <a href="https://www.linkedin.com/in/sonobia-james" target="_blank" class="t-link">linkedin.com/in/sonobia-james</a></div>
+
+      <div class="t-line" style="margin-top:1rem"><span class="t-prompt">$</span> <span class="t-cmd">status --availability</span></div>
+      <div class="t-line t-out t-green">▶ OPEN TO OPPORTUNITIES — SOC analyst, security analysis, or adjacent roles</div>
+
+      <div class="t-line" style="margin-top:1rem"><span class="t-prompt">$</span> <span class="cursor"></span></div>
+    </div>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer>
+    <div class="footer-name">SJ_</div>
+    <p class="footer-sub">SONOBIA JAMES // CYBERSECURITY PORTFOLIO // built with curiosity &amp; too much time in the terminal</p>
+  </footer>
+
+  <script>
+    // ==================== BOOT SCREEN ====================
+    const bootScreen = document.getElementById('boot-screen');
+    setTimeout(() => {
+      bootScreen.classList.add('fade-out');
+      setTimeout(() => bootScreen.remove(), 800);
+    }, 3900);
+
+    // ==================== MATRIX RAIN ====================
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const chars = 'アイウエオカキクケコサシスセソ01010110アABCDEFGHSJ_♦♥✦◈▲'.split('');
+    const fontSize = 13;
+    let columns = Math.floor(canvas.width / fontSize);
+    let drops = Array.from({ length: columns }, () => Math.random() * -80);
+
+    const palette = ['#ff2d78', '#ff2d78', '#b400ff', '#ff2d78', '#00f5ff', '#ff2d78'];
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(5, 5, 8, 0.055)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = fontSize + 'px Share Tech Mono';
+
+      drops.forEach((y, i) => {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillStyle = palette[Math.floor(Math.random() * palette.length)];
+        ctx.globalAlpha = 0.5 + Math.random() * 0.5;
+        ctx.fillText(char, i * fontSize, y * fontSize);
+        ctx.globalAlpha = 1;
+        if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i] += 0.65;
+      });
+    }
+
+    setInterval(drawMatrix, 40);
+
+    window.addEventListener('resize', () => {
+      columns = Math.floor(canvas.width / fontSize);
+      drops = Array.from({ length: columns }, () => Math.random() * -80);
+    });
+
+    // ==================== TYPEWRITER ====================
+    const phrases = [
+      'security student. cs teacher. perpetual learner.',
+      'breaking things to understand how to fix them.',
+      'learning out loud. being serious about my future.',
+      'y2k baby. cyber girl. always curious.',
+      'why do attacks work? that\'s the real question.',
+    ];
+
+    let pIdx = 0, cIdx = 0, deleting = false;
+    const el = document.getElementById('typewriter');
+
+    function type() {
+      const phrase = phrases[pIdx];
+      if (!deleting) {
+        cIdx++;
+        el.innerHTML = phrase.slice(0, cIdx) + '<span class="cursor"></span>';
+        if (cIdx === phrase.length) {
+          deleting = true;
+          setTimeout(type, 2800);
+          return;
+        }
+      } else {
+        cIdx--;
+        el.innerHTML = phrase.slice(0, cIdx) + '<span class="cursor"></span>';
+        if (cIdx === 0) {
+          deleting = false;
+          pIdx = (pIdx + 1) % phrases.length;
+        }
+      }
+      setTimeout(type, deleting ? 35 : 70);
+    }
+
+    // start after boot screen clears
+    setTimeout(type, 4400);
+  </script>
 
 </body>
-</html>7
+</html>
