@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Continuing My Journey // SJ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #ff2d78;
+      --purple: #b400ff;
+      --cyan: #00f5ff;
+      --bg: #050508;
+      --text: #f0e6ff;
+      --dim: #7a6a8e;
+      --card-bg: rgba(15, 8, 25, 0.9);
+      --card-border: rgba(180, 0, 255, 0.2);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Share Tech Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      background-image:
+        linear-gradient(rgba(180, 0, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(180, 0, 255, 0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* ==================== NAV ==================== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(5, 5, 8, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 45, 120, 0.18);
+    }
+
+    .nav-logo {
+      font-family: 'VT323', monospace;
+      font-size: 2rem;
+      color: var(--pink);
+      text-shadow: 0 0 18px var(--pink), 0 0 40px rgba(255,45,120,0.4);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.75rem;
+      color: var(--dim);
+      text-decoration: none;
+      letter-spacing: 0.2em;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--pink);
+      text-shadow: 0 0 10px var(--pink);
+    }
+
+    /* ==================== ARTICLE ==================== */
+    .article-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 8rem 2rem 6rem;
+    }
+
+    .breadcrumb {
+      font-size: 0.72rem;
+      color: var(--dim);
+      letter-spacing: 0.15em;
+      margin-bottom: 2.5rem;
+    }
+
+    .breadcrumb a {
+      color: var(--pink);
+      text-decoration: none;
+      transition: text-shadow 0.3s;
+    }
+
+    .breadcrumb a:hover { text-shadow: 0 0 8px var(--pink); }
+    .breadcrumb span { margin: 0 0.5rem; opacity: 0.4; }
+
+    .post-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(180,0,255,0.15);
+    }
+
+    .post-meta-top {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .post-num {
+      font-size: 0.68rem;
+      color: var(--pink);
+      letter-spacing: 0.3em;
+    }
+
+    .post-cat {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      padding: 0.2rem 0.65rem;
+      border-radius: 2px;
+      color: #ffaa44;
+      border: 1px solid rgba(255,170,68,0.3);
+      background: rgba(255,170,68,0.06);
+    }
+
+    .post-date {
+      font-size: 0.68rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+    }
+
+    .post-title {
+      font-family: 'VT323', monospace;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      color: #fff;
+      text-shadow: 0 0 20px var(--pink), 0 0 50px rgba(255,45,120,0.2);
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+      letter-spacing: 0.03em;
+    }
+
+    .post-subtitle {
+      font-size: 0.9rem;
+      color: var(--dim);
+      line-height: 1.8;
+    }
+
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      background: rgba(180,0,255,0.08);
+      border: 1px solid rgba(180,0,255,0.22);
+      color: #c080e8;
+    }
+
+    /* ==================== BODY ==================== */
+    .post-body {
+      font-size: 0.92rem;
+      line-height: 2;
+      color: #baaed0;
+    }
+
+    .post-body p { margin-bottom: 1.6rem; }
+
+    .post-body h2 {
+      font-family: 'VT323', monospace;
+      font-size: 2rem;
+      color: var(--text);
+      text-shadow: 0 0 12px rgba(180,0,255,0.35);
+      margin: 3rem 0 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(180,0,255,0.12);
+      letter-spacing: 0.03em;
+    }
+
+    .post-body strong { color: var(--text); }
+    .hi-pink { color: var(--pink); }
+    .hi-cyan { color: var(--cyan); }
+    .hi-purple { color: #c878ff; }
+
+    /* Timeline node */
+    .timeline-node {
+      display: flex;
+      gap: 1.5rem;
+      margin: 2rem 0;
+      align-items: flex-start;
+    }
+
+    .node-year {
+      font-family: 'VT323', monospace;
+      font-size: 1.6rem;
+      color: var(--pink);
+      text-shadow: 0 0 10px rgba(255,45,120,0.4);
+      min-width: 70px;
+      line-height: 1.2;
+      padding-top: 0.1rem;
+    }
+
+    .node-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .node-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--pink);
+      box-shadow: 0 0 10px var(--pink);
+      margin-top: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .node-connector {
+      width: 1px;
+      flex: 1;
+      background: linear-gradient(to bottom, rgba(255,45,120,0.4), rgba(180,0,255,0.1));
+      min-height: 40px;
+    }
+
+    .node-content {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 1.25rem 1.5rem;
+      flex: 1;
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: #baaed0;
+    }
+
+    .node-content strong { color: var(--text); }
+
+    /* Callout */
+    .callout {
+      background: rgba(255,45,120,0.06);
+      border: 1px solid rgba(255,45,120,0.2);
+      border-left: 3px solid var(--pink);
+      border-radius: 0 4px 4px 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1.75rem 0;
+      font-size: 0.88rem;
+      line-height: 1.85;
+      color: #d0b8cc;
+    }
+
+    .callout.cyan {
+      background: rgba(0,245,255,0.04);
+      border-color: rgba(0,245,255,0.2);
+      border-left-color: var(--cyan);
+    }
+
+    .callout-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: var(--pink);
+      margin-bottom: 0.5rem;
+    }
+
+    .callout.cyan .callout-label { color: var(--cyan); }
+
+    /* Closing block */
+    .closing-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 2rem;
+      margin-top: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .closing-block::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--pink), var(--purple), var(--cyan));
+    }
+
+    .post-footer-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(180,0,255,0.15);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-link {
+      font-size: 0.78rem;
+      color: var(--dim);
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(122,106,142,0.3);
+      padding-bottom: 2px;
+      transition: all 0.3s;
+    }
+
+    .nav-link:hover {
+      color: var(--pink);
+      border-color: var(--pink);
+      text-shadow: 0 0 8px var(--pink);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      border-top: 1px solid rgba(180,0,255,0.1);
+    }
+
+    .footer-name {
+      font-family: 'VT323', monospace;
+      font-size: 1.4rem;
+      color: var(--pink);
+      letter-spacing: 0.3em;
+      text-shadow: 0 0 12px rgba(255,45,120,0.4);
+      margin-bottom: 0.4rem;
+    }
+
+    .footer-sub { font-size: 0.7rem; color: rgba(122,106,142,0.5); letter-spacing: 0.1em; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0.85rem 1.25rem; }
+      .nav-links { gap: 1rem; }
+      .nav-links a { font-size: 0.65rem; letter-spacing: 0.1em; }
+      .timeline-node { flex-direction: column; gap: 0.75rem; }
+      .node-line { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html" class="nav-logo">SJ_</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#about">PROFILE</a></li>
+      <li><a href="../index.html#certs">CLEARANCE</a></li>
+      <li><a href="../index.html#projects">CASE FILES</a></li>
+      <li><a href="index.html" class="active">TRANSMISSIONS</a></li>
+      <li><a href="../field-notes/index.html">FIELD NOTES</a></li>
+      <li><a href="../index.html#contact">COMMS</a></li>
+    </ul>
+  </nav>
+
+  <div class="article-wrap">
+
+    <div class="breadcrumb">
+      <a href="index.html">TRANSMISSIONS</a>
+      <span>/</span>
+      TRANSMISSION // 003
+    </div>
+
+    <header class="post-header">
+      <div class="post-meta-top">
+        <span class="post-num">TRANSMISSION // 003</span>
+        <span class="post-cat">PERSONAL</span>
+        <span class="post-date">MAR 31, 2025</span>
+      </div>
+      <h1 class="post-title">CONTINUING MY JOURNEY</h1>
+      <p class="post-subtitle">This journey has been anything but linear. A story about a math program, a rejected dream, a teaching pivot, and finding my way back to the thing I was always supposed to do.</p>
+      <div class="post-tags">
+        <span class="tag">PERSONAL</span>
+        <span class="tag">CAREER PIVOT</span>
+        <span class="tag">CYBERSECURITY</span>
+        <span class="tag">TEACHING</span>
+        <span class="tag">ORIGIN STORY</span>
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      <p>This journey has been anything but linear for me.</p>
+
+      <h2>IT STARTED WITH A MATH TEACHER WHO WOULDN'T GIVE UP</h2>
+
+      <p>Let me take you back to <span class="hi-pink">2013</span> — I was 11 years old, 7th grade. My math teacher, Ms. Moore, kept asking me if I was interested in joining the Mathletes. My answer was a quick and resolute no — for two reasons. First, I hated math. Second, I was already juggling the debate team and other commitments.</p>
+
+      <p>Ms. Moore was disappointed but didn't give up. Every day, she pushed me to reconsider. Then one day, instead of her usual request, she asked if I'd checked my school email. I didn't even know I had one at that point.</p>
+
+      <p>She encouraged me to check it, hinting at something exciting. Intrigued, I logged in.</p>
+
+      <div class="callout">
+        <div class="callout-label">// THE MOMENT</div>
+        I remembered a strange test we'd taken earlier that year — abstract shapes, odd concepts, nothing like any test I'd ever seen. Ms. Moore explained it was given by a program called <strong>BEAM (Bridge to Enter Advanced Mathematics)</strong> — a summer program for students my age to study college-level math.
+      </div>
+
+      <p>I was immediately put off by the idea of spending my 11-year-old summer away from home doing math. But Ms. Moore urged me to at least consider it. I went to the info session. And then I signed up.</p>
+
+      <h2>THE SUMMER THAT CHANGED EVERYTHING</h2>
+
+      <p>The BEAM summer program turned out to be unforgettable. I made great friends, played nerdy games like Dominion and Set, and took college-level math courses on <span class="hi-cyan">programming, code-cracking, and formal systems</span>. I also got to go hiking, visit a water park, and explore Six Flags — all while staying on Bard College's campus.</p>
+
+      <p>The program introduced me to the kind of fun I never thought I'd have with math. Which eventually led me into the world of computer science. Even after the program ended, BEAM stayed in touch — Saturday classes, continued support through high school and college.</p>
+
+      <p>But as life often goes, I drifted. Personal challenges pulled me away from math and science. That connection I'd built went quiet.</p>
+
+      <h2>THE DETOUR</h2>
+
+      <p>Fast forward to college. I was majoring in <span class="hi-purple">Digital Journalism and Communication Arts</span> with a minor in Speech. Despite my love for writing, something felt off. I wasn't satisfied. I wasn't sure I could continue — most of my classes felt disconnected from what I truly cared about.</p>
+
+      <p>Then, going through my emails, I found one from BEAM's college team — internship opportunities in math and computer science. Hesitant but intrigued, I reached out, explaining I was considering leaving college and wanted to explore something different.</p>
+
+      <p>They pointed me toward the one opportunity that fit: the <span class="hi-pink">Marcy Lab School</span> — a fully funded tech fellowship that would teach me the fundamentals of software engineering and help me land a job in tech.</p>
+
+      <div class="callout cyan">
+        <div class="callout-label">// THE DREAM, REVISITED</div>
+        I remembered my childhood dream of being a tech whiz who attended MIT — smart, successful, all of it. It had always felt unattainable. But now, for the first time, it felt within reach.
+      </div>
+
+      <h2>MARCY, AND THE REJECTION THAT HURT</h2>
+
+      <p>I applied to Marcy. That summer became a turning point. My boyfriend helped me build my first PC. I wrote my first lines of <span class="hi-cyan">Ruby and JavaScript</span>. I spent months learning how to think like a software engineer.</p>
+
+      <p>But when graduation came, the job market wasn't ideal. Interviews were hard to land. Then I finally got one — with one of my dream companies. And I choked. I wasn't selected.</p>
+
+      <p>That rejection hurt deeply. It reignited the <span class="hi-purple">imposter syndrome</span> I'd battled for years — especially as a young Black woman in a predominantly white, male industry.</p>
+
+      <p>I decided to take a break from coding. A huge mistake. Without the structure of daily practice, I lost my momentum. The job-seekers program that followed was discouraging — entry-level roles requiring 5+ years of experience, an overwhelming search, and the pressure of needing income.</p>
+
+      <h2>COMING FULL CIRCLE</h2>
+
+      <p>I reached back out to BEAM. They connected me to a TA position for two courses — including one on Excel with Python. And something clicked: <span class="hi-pink">I, a BEAM student, was now in a position to pay it forward.</span></p>
+
+      <p>Around the same time, I'd learned about the <span class="hi-cyan">Feynman Technique</span> — the idea that you truly understand something when you can teach it to someone who knows nothing about it. TA'ing was that in practice. I was improving my own skills by helping others. I started to love it.</p>
+
+      <p>Then came the opportunity that changed everything again: a new teaching pathway initiative. Schools in the city were looking for computer science teachers. I applied to three schools. Only one felt right. After a positive interview process — I got the job.</p>
+
+      <h2>WHERE I AM NOW</h2>
+
+      <div class="timeline-node">
+        <div class="node-year">2013</div>
+        <div class="node-line"><div class="node-dot"></div><div class="node-connector"></div></div>
+        <div class="node-content">BEAM summer program at Bard College. First exposure to programming and code-cracking. <strong>The spark.</strong></div>
+      </div>
+
+      <div class="timeline-node">
+        <div class="node-year">2022</div>
+        <div class="node-line"><div class="node-dot"></div><div class="node-connector"></div></div>
+        <div class="node-content">Marcy Lab School. Built my first PC. Wrote my first Ruby and JavaScript. <strong>The foundation.</strong></div>
+      </div>
+
+      <div class="timeline-node">
+        <div class="node-year">2023</div>
+        <div class="node-line"><div class="node-dot"></div><div class="node-connector"></div></div>
+        <div class="node-content">Became a computer science teacher. Applied the Feynman Technique every single day. <strong>The pivot.</strong></div>
+      </div>
+
+      <div class="timeline-node">
+        <div class="node-year">NOW</div>
+        <div class="node-line"><div class="node-dot"></div></div>
+        <div class="node-content">Studying cybersecurity. Building Python tools. Running labs. Pursuing Security+. <strong>The return.</strong></div>
+      </div>
+
+      <div class="closing-block">
+        <p>I taught computer science for about 1.5 years, and it was one of the hardest and most rewarding things I've ever done. I now understand why people say teaching is the hardest job — it truly is. But so is everything worth doing.</p>
+        <p style="margin-top: 1.25rem;">Now I'm continuing my tech journey while teaching computer science. I've rediscovered my love for cybersecurity — one of my childhood interests — and I'm studying, building, and planning to pursue certifications to become a SOC Analyst.</p>
+        <p style="margin-top: 1.25rem;">And the full-circle moment that still gets me: I no longer teach full-time, but <span class="hi-pink">I still teach at BEAM — both the Saturday classes and the Summer Away program</span>, the very same one I attended as an 11-year-old. Now I'm the one in the front of the room running programming courses. The kid who didn't want to join Mathletes came all the way back.</p>
+        <p style="margin-top: 1.25rem; color: var(--dim); font-style: italic;">This journey has been anything but linear. And I wouldn't change a single detour.</p>
+      </div>
+
+    </div>
+
+    <div class="post-footer-nav">
+      <a href="index.html" class="nav-link">← BACK TO TRANSMISSIONS</a>
+      <a href="openvas.html" class="nav-link">NEXT: VULNERABILITY SCANNING →</a>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-name">SJ_</div>
+    <p class="footer-sub">SONOBIA JAMES // TRANSMISSIONS // TRANSMISSION 003</p>
+  </footer>
+
+</body>
+</html>
