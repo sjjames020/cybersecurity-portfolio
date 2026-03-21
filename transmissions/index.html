@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRANSMISSIONS // SJ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #ff2d78;
+      --purple: #b400ff;
+      --cyan: #00f5ff;
+      --bg: #050508;
+      --text: #f0e6ff;
+      --dim: #7a6a8e;
+      --card-bg: rgba(15, 8, 25, 0.9);
+      --card-border: rgba(180, 0, 255, 0.2);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Share Tech Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      background-image:
+        linear-gradient(rgba(180, 0, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(180, 0, 255, 0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* ==================== NAV ==================== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(5, 5, 8, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 45, 120, 0.18);
+    }
+
+    .nav-logo {
+      font-family: 'VT323', monospace;
+      font-size: 2rem;
+      color: var(--pink);
+      text-shadow: 0 0 18px var(--pink), 0 0 40px rgba(255,45,120,0.4);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.75rem;
+      color: var(--dim);
+      text-decoration: none;
+      letter-spacing: 0.2em;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--pink);
+      text-shadow: 0 0 10px var(--pink);
+    }
+
+    /* ==================== HERO ==================== */
+    .page-hero {
+      padding: 10rem 2rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      border-bottom: 1px solid rgba(180, 0, 255, 0.15);
+      margin-bottom: 4rem;
+    }
+
+    .hero-label {
+      font-size: 0.75rem;
+      color: var(--pink);
+      letter-spacing: 0.4em;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-title {
+      font-family: 'VT323', monospace;
+      font-size: clamp(4rem, 10vw, 7rem);
+      color: #fff;
+      text-shadow:
+        0 0 20px var(--pink),
+        0 0 50px var(--pink),
+        0 0 100px rgba(255,45,120,0.3);
+      line-height: 1;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-sub {
+      font-size: 0.9rem;
+      color: var(--dim);
+      line-height: 1.8;
+      max-width: 600px;
+    }
+
+    .hero-sub span { color: var(--cyan); }
+
+    /* ==================== FILTER TAGS ==================== */
+    .filter-wrap {
+      max-width: 1200px;
+      margin: 0 auto 2.5rem;
+      padding: 0 2rem;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      padding: 0.35rem 1rem;
+      border-radius: 2px;
+      border: 1px solid;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: transparent;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .filter-tag.all {
+      color: var(--pink);
+      border-color: rgba(255,45,120,0.4);
+    }
+    .filter-tag.all:hover, .filter-tag.all.active {
+      background: rgba(255,45,120,0.12);
+      box-shadow: 0 0 12px rgba(255,45,120,0.2);
+    }
+
+    .filter-tag.cybersec {
+      color: var(--cyan);
+      border-color: rgba(0,245,255,0.35);
+    }
+    .filter-tag.cybersec:hover, .filter-tag.cybersec.active {
+      background: rgba(0,245,255,0.08);
+      box-shadow: 0 0 12px rgba(0,245,255,0.15);
+    }
+
+    .filter-tag.dev {
+      color: #c878ff;
+      border-color: rgba(180,0,255,0.35);
+    }
+    .filter-tag.dev:hover, .filter-tag.dev.active {
+      background: rgba(180,0,255,0.08);
+      box-shadow: 0 0 12px rgba(180,0,255,0.15);
+    }
+
+    .filter-tag.personal {
+      color: #ffaa44;
+      border-color: rgba(255,170,68,0.35);
+    }
+    .filter-tag.personal:hover, .filter-tag.personal.active {
+      background: rgba(255,170,68,0.08);
+      box-shadow: 0 0 12px rgba(255,170,68,0.15);
+    }
+
+    /* ==================== POSTS GRID ==================== */
+    .posts-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .post-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 1.75rem;
+      position: relative;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .post-card:hover {
+      border-color: rgba(255, 45, 120, 0.45);
+      box-shadow: 0 0 30px rgba(255,45,120,0.08), 0 0 60px rgba(180,0,255,0.05);
+      transform: translateY(-5px);
+    }
+
+    .post-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, var(--pink), var(--purple));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .post-card:hover::before { opacity: 1; }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .post-number {
+      font-size: 0.65rem;
+      color: var(--pink);
+      letter-spacing: 0.3em;
+    }
+
+    .post-date {
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+    }
+
+    .post-category {
+      display: inline-block;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      margin-bottom: 0.75rem;
+    }
+
+    .cat-cybersec {
+      color: var(--cyan);
+      border: 1px solid rgba(0,245,255,0.3);
+      background: rgba(0,245,255,0.06);
+    }
+
+    .cat-dev {
+      color: #c878ff;
+      border: 1px solid rgba(180,0,255,0.3);
+      background: rgba(180,0,255,0.06);
+    }
+
+    .cat-personal {
+      color: #ffaa44;
+      border: 1px solid rgba(255,170,68,0.3);
+      background: rgba(255,170,68,0.06);
+    }
+
+    .post-title {
+      font-family: 'VT323', monospace;
+      font-size: 1.65rem;
+      color: var(--text);
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+
+    .post-excerpt {
+      font-size: 0.82rem;
+      color: #9080a8;
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+      flex: 1;
+    }
+
+    .post-link {
+      display: inline-block;
+      font-size: 0.75rem;
+      color: var(--pink);
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,45,120,0.3);
+      padding-bottom: 2px;
+      transition: all 0.3s;
+      align-self: flex-start;
+    }
+
+    .post-link:hover {
+      color: #fff;
+      border-color: var(--pink);
+      text-shadow: 0 0 10px var(--pink);
+    }
+
+    .post-link.own {
+      color: var(--cyan);
+      border-color: rgba(0,245,255,0.3);
+    }
+
+    .post-link.own:hover {
+      color: #fff;
+      border-color: var(--cyan);
+      text-shadow: 0 0 10px var(--cyan);
+    }
+
+    .medium-note {
+      display: inline-block;
+      font-size: 0.6rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+      margin-left: 0.75rem;
+      vertical-align: middle;
+      opacity: 0.7;
+    }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      border-top: 1px solid rgba(180,0,255,0.1);
+    }
+
+    .footer-name {
+      font-family: 'VT323', monospace;
+      font-size: 1.4rem;
+      color: var(--pink);
+      letter-spacing: 0.3em;
+      text-shadow: 0 0 12px rgba(255,45,120,0.4);
+      margin-bottom: 0.4rem;
+    }
+
+    .footer-sub {
+      font-size: 0.7rem;
+      color: rgba(122,106,142,0.5);
+      letter-spacing: 0.1em;
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+      nav { padding: 0.85rem 1.25rem; }
+      .nav-links { gap: 1.2rem; }
+      .nav-links a { font-size: 0.68rem; letter-spacing: 0.12em; }
+      .posts-wrap { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="../index.html" class="nav-logo">SJ_</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#about">PROFILE</a></li>
+      <li><a href="../index.html#certs">CLEARANCE</a></li>
+      <li><a href="../index.html#projects">CASE FILES</a></li>
+      <li><a href="index.html" class="active">TRANSMISSIONS</a></li>
+      <li><a href="../field-notes/index.html">FIELD NOTES</a></li>
+      <li><a href="../index.html#contact">COMMS</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <p class="hero-label">&gt; BROADCAST CHANNEL // ACTIVE</p>
+    <h1 class="hero-title">TRANSMISSIONS</h1>
+    <p class="hero-sub">Dispatches from the lab. Reflections on the journey. <span>Learning out loud</span> — from a CS teacher carving her path into cybersecurity, one post at a time.</p>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-wrap">
+    <button class="filter-tag all active" onclick="filter('all', this)">ALL SIGNALS</button>
+    <button class="filter-tag cybersec" onclick="filter('cybersec', this)">CYBERSECURITY</button>
+    <button class="filter-tag dev" onclick="filter('dev', this)">DEVELOPMENT</button>
+    <button class="filter-tag personal" onclick="filter('personal', this)">PERSONAL</button>
+  </div>
+
+  <!-- POSTS -->
+  <div class="posts-wrap" id="posts">
+
+    <div class="post-card" data-cat="cybersec">
+      <div class="post-meta">
+        <span class="post-number">TRANSMISSION // 001</span>
+        <span class="post-date">SEP 25, 2025</span>
+      </div>
+      <span class="post-category cat-cybersec">CYBERSECURITY</span>
+      <h2 class="post-title">VULNERABILITY SCANNING WITH OPENVAS</h2>
+      <p class="post-excerpt">A hands-on walkthrough of vulnerability scanning using OpenVAS in a lab environment. Covers scanning fundamentals, CVE/CVSS scoring, and documents my first full scan — 26 findings, including a critical CVSS 10.0 default credential vulnerability.</p>
+      <a href="openvas.html" class="post-link own">READ POST →</a>
+    </div>
+
+    <div class="post-card" data-cat="personal">
+      <div class="post-meta">
+        <span class="post-number">TRANSMISSION // 002</span>
+        <span class="post-date">JUL 05, 2025</span>
+      </div>
+      <span class="post-category cat-personal">PERSONAL</span>
+      <h2 class="post-title">BUILDING MY CYBER FOUNDATIONS: A REFLECTION</h2>
+      <p class="post-excerpt">A reflection on my cybersecurity learning journey so far — networking basics, data transmission concepts, foundational security topics, and the honest experience of dealing with imposter syndrome while balancing theory with hands-on practice.</p>
+      <a href="https://medium.com/@sjjames020/building-my-cyber-foundations-a-reflection-on-my-learning-so-far-0b93983fa5ab" target="_blank" class="post-link">READ ON MEDIUM →<span class="medium-note">// migrating soon</span></a>
+    </div>
+
+    <div class="post-card" data-cat="personal">
+      <div class="post-meta">
+        <span class="post-number">TRANSMISSION // 003</span>
+        <span class="post-date">MAR 31, 2025</span>
+      </div>
+      <span class="post-category cat-personal">PERSONAL</span>
+      <h2 class="post-title">CONTINUING MY JOURNEY</h2>
+      <p class="post-excerpt">A personal narrative tracing my non-linear path — from childhood math programs through software engineering education to CS teaching. On mentorship, pivots, and what it really looks like to transition into cybersecurity while keeping your day job.</p>
+      <a href="https://medium.com/@sjjames020/continuing-my-journey-5fa99244bc61" target="_blank" class="post-link">READ ON MEDIUM →<span class="medium-note">// migrating soon</span></a>
+    </div>
+
+    <div class="post-card" data-cat="dev">
+      <div class="post-meta">
+        <span class="post-number">TRANSMISSION // 004</span>
+        <span class="post-date">JAN 24, 2024</span>
+      </div>
+      <span class="post-category cat-dev">DEVELOPMENT</span>
+      <h2 class="post-title">DECODING MONGODB: YOUR GATEWAY TO SCALABLE DATA</h2>
+      <p class="post-excerpt">A comprehensive MongoDB tutorial covering document-based storage, CRUD operations, indexing, and aggregation pipelines — illustrated with a mood-tracking app. Collections, BSON formatting, and query optimization made approachable.</p>
+      <a href="https://medium.com/@sjjames020/decoding-mongodb-your-gateway-to-scalable-data-management-9f5047c84dcc" target="_blank" class="post-link">READ ON MEDIUM →<span class="medium-note">// migrating soon</span></a>
+    </div>
+
+    <div class="post-card" data-cat="dev">
+      <div class="post-meta">
+        <span class="post-number">TRANSMISSION // 005</span>
+        <span class="post-date">DEC 06, 2023</span>
+      </div>
+      <span class="post-category cat-dev">DEVELOPMENT</span>
+      <h2 class="post-title">THE KEY TO WRITING EFFECTIVE TECHNICAL DOCUMENTATION</h2>
+      <p class="post-excerpt">How clear documentation reduces comprehension time and makes teams stronger. Actionable guidance on comments, commit messages, README files, and clean coding practices — because if you can't explain it, you don't fully own it.</p>
+      <a href="https://medium.com/@sjjames020/the-key-to-writing-effective-technical-documentation-ensuring-readability-and-maintainability-of-345b75c90db8" target="_blank" class="post-link">READ ON MEDIUM →<span class="medium-note">// migrating soon</span></a>
+    </div>
+
+    <div class="post-card" data-cat="dev">
+      <div class="post-meta">
+        <span class="post-number">TRANSMISSION // 006</span>
+        <span class="post-date">DEC 06, 2023</span>
+      </div>
+      <span class="post-category cat-dev">DEVELOPMENT</span>
+      <h2 class="post-title">CODE CPR: THE ART OF RESURRECTING SOFTWARE THROUGH REFACTORING</h2>
+      <p class="post-excerpt">Method extraction, renaming, design patterns, dependency injection — the full toolkit for bringing legacy code back to life. When to refactor vs. when to rewrite, and how to tell the difference before it's too late.</p>
+      <a href="https://medium.com/@sjjames020/code-cpr-the-art-of-resurrecting-software-through-epic-refactoring-64d308433837" target="_blank" class="post-link">READ ON MEDIUM →<span class="medium-note">// migrating soon</span></a>
+    </div>
+
+    <div class="post-card" data-cat="dev">
+      <div class="post-meta">
+        <span class="post-number">TRANSMISSION // 007</span>
+        <span class="post-date">JUL 14, 2023</span>
+      </div>
+      <span class="post-category cat-dev">DEVELOPMENT</span>
+      <h2 class="post-title">REACT-TASTIC JOURNEY: UNLEASH YOUR WEB SUPERPOWERS</h2>
+      <p class="post-excerpt">An enthusiastic intro to React — Virtual DOM, component architecture, JSX, and hooks. Written for the developer who keeps hearing about React but hasn't taken the plunge yet. Practical recommendations for actually learning it by building.</p>
+      <a href="https://medium.com/@sjjames020/react-tastic-journey-unleash-your-web-superpowers-dfadd913ed0d" target="_blank" class="post-link">READ ON MEDIUM →<span class="medium-note">// migrating soon</span></a>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-name">SJ_</div>
+    <p class="footer-sub">SONOBIA JAMES // TRANSMISSIONS // dispatches from the learning curve</p>
+  </footer>
+
+  <script>
+    function filter(cat, btn) {
+      // update active button
+      document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // show/hide cards
+      document.querySelectorAll('.post-card').forEach(card => {
+        if (cat === 'all' || card.dataset.cat === cat) {
+          card.style.display = 'flex';
+          card.style.animation = 'none';
+          setTimeout(() => { card.style.animation = 'fadeUp 0.4s ease forwards'; }, 10);
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // add fadeUp keyframe
+    const style = document.createElement('style');
+    style.textContent = '@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }';
+    document.head.appendChild(style);
+  </script>
+
+</body>
+</html>

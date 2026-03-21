@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vulnerability Scanning With OpenVAS // SJ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #ff2d78;
+      --purple: #b400ff;
+      --cyan: #00f5ff;
+      --bg: #050508;
+      --text: #f0e6ff;
+      --dim: #7a6a8e;
+      --card-bg: rgba(15, 8, 25, 0.9);
+      --card-border: rgba(180, 0, 255, 0.2);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Share Tech Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      background-image:
+        linear-gradient(rgba(180, 0, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(180, 0, 255, 0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* ==================== NAV ==================== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(5, 5, 8, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 45, 120, 0.18);
+    }
+
+    .nav-logo {
+      font-family: 'VT323', monospace;
+      font-size: 2rem;
+      color: var(--pink);
+      text-shadow: 0 0 18px var(--pink), 0 0 40px rgba(255,45,120,0.4);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.75rem;
+      color: var(--dim);
+      text-decoration: none;
+      letter-spacing: 0.2em;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--pink);
+      text-shadow: 0 0 10px var(--pink);
+    }
+
+    /* ==================== ARTICLE LAYOUT ==================== */
+    .article-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 8rem 2rem 6rem;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      font-size: 0.72rem;
+      color: var(--dim);
+      letter-spacing: 0.15em;
+      margin-bottom: 2.5rem;
+    }
+
+    .breadcrumb a {
+      color: var(--pink);
+      text-decoration: none;
+      transition: text-shadow 0.3s;
+    }
+
+    .breadcrumb a:hover { text-shadow: 0 0 8px var(--pink); }
+    .breadcrumb span { margin: 0 0.5rem; opacity: 0.4; }
+
+    /* Post header */
+    .post-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(180,0,255,0.15);
+    }
+
+    .post-meta-top {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .post-num {
+      font-size: 0.68rem;
+      color: var(--pink);
+      letter-spacing: 0.3em;
+    }
+
+    .post-cat {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      padding: 0.2rem 0.65rem;
+      border-radius: 2px;
+      color: var(--cyan);
+      border: 1px solid rgba(0,245,255,0.3);
+      background: rgba(0,245,255,0.06);
+    }
+
+    .post-date {
+      font-size: 0.68rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+    }
+
+    .post-title {
+      font-family: 'VT323', monospace;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      color: #fff;
+      text-shadow: 0 0 20px var(--pink), 0 0 50px rgba(255,45,120,0.2);
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+      letter-spacing: 0.03em;
+    }
+
+    .post-subtitle {
+      font-size: 0.9rem;
+      color: var(--dim);
+      line-height: 1.8;
+    }
+
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      background: rgba(180,0,255,0.08);
+      border: 1px solid rgba(180,0,255,0.22);
+      color: #c080e8;
+    }
+
+    /* ==================== ARTICLE BODY ==================== */
+    .post-body {
+      font-size: 0.92rem;
+      line-height: 1.95;
+      color: #baaed0;
+    }
+
+    .post-body p { margin-bottom: 1.5rem; }
+
+    .post-body h2 {
+      font-family: 'VT323', monospace;
+      font-size: 2rem;
+      color: var(--text);
+      text-shadow: 0 0 12px rgba(180,0,255,0.35);
+      margin: 3rem 0 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(180,0,255,0.12);
+      letter-spacing: 0.03em;
+    }
+
+    .post-body h3 {
+      font-family: 'VT323', monospace;
+      font-size: 1.55rem;
+      color: var(--pink);
+      margin: 2rem 0 0.75rem;
+      letter-spacing: 0.03em;
+    }
+
+    .post-body strong { color: var(--text); }
+    .post-body em { color: var(--cyan); font-style: normal; }
+
+    /* Callout box */
+    .callout {
+      background: rgba(255,45,120,0.06);
+      border: 1px solid rgba(255,45,120,0.2);
+      border-left: 3px solid var(--pink);
+      border-radius: 0 4px 4px 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1.75rem 0;
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: #d0b8cc;
+    }
+
+    .callout.cyan {
+      background: rgba(0,245,255,0.04);
+      border-color: rgba(0,245,255,0.2);
+      border-left-color: var(--cyan);
+    }
+
+    .callout.purple {
+      background: rgba(180,0,255,0.05);
+      border-color: rgba(180,0,255,0.2);
+      border-left-color: var(--purple);
+    }
+
+    .callout-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: var(--pink);
+      margin-bottom: 0.5rem;
+    }
+
+    .callout.cyan .callout-label { color: var(--cyan); }
+    .callout.purple .callout-label { color: #c878ff; }
+
+    /* Scan type list */
+    .scan-type {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .scan-type-name {
+      font-size: 0.8rem;
+      color: var(--pink);
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem;
+    }
+
+    .scan-type-desc {
+      font-size: 0.85rem;
+      color: #9080a8;
+      line-height: 1.75;
+    }
+
+    /* CVSS scale */
+    .cvss-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .cvss-row {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 0.9rem 1.1rem;
+      border-left: 3px solid;
+    }
+
+    .cvss-row.low    { border-left-color: #22c55e; }
+    .cvss-row.medium { border-left-color: #f59e0b; }
+    .cvss-row.high   { border-left-color: #f97316; }
+    .cvss-row.crit   { border-left-color: #ef4444; }
+
+    .cvss-range { font-size: 0.75rem; color: var(--dim); letter-spacing: 0.1em; margin-bottom: 0.25rem; }
+    .cvss-label.low    { color: #22c55e; font-size: 0.85rem; }
+    .cvss-label.medium { color: #f59e0b; font-size: 0.85rem; }
+    .cvss-label.high   { color: #f97316; font-size: 0.85rem; }
+    .cvss-label.crit   { color: #ef4444; font-size: 0.85rem; }
+
+    /* Screenshots */
+    .screenshot-block {
+      margin: 2rem 0;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .screenshot-block:hover { border-color: rgba(255,45,120,0.35); }
+
+    .screenshot-block img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .screenshot-caption {
+      padding: 0.9rem 1.25rem;
+      font-size: 0.75rem;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+      border-top: 1px solid rgba(180,0,255,0.1);
+    }
+
+    .screenshot-caption strong { color: var(--pink); }
+
+    /* Critical finding highlight */
+    .critical-box {
+      background: linear-gradient(135deg, rgba(239,68,68,0.08) 0%, rgba(220,38,38,0.04) 100%);
+      border: 1px solid rgba(239,68,68,0.25);
+      border-radius: 4px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .critical-label {
+      font-size: 0.68rem;
+      color: #fca5a5;
+      letter-spacing: 0.25em;
+      margin-bottom: 0.75rem;
+    }
+
+    .critical-row {
+      font-size: 0.85rem;
+      color: #d0b8cc;
+      margin-bottom: 0.4rem;
+      line-height: 1.6;
+    }
+
+    .critical-row strong { color: #fca5a5; }
+
+    /* Terminal inline */
+    .inline-terminal {
+      background: #040208;
+      border: 1px solid rgba(255,45,120,0.18);
+      border-radius: 4px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-size: 0.82rem;
+    }
+
+    .t-prompt { color: var(--pink); }
+    .t-cmd { color: var(--text); }
+    .t-out { color: #7a6a8e; padding-left: 1.5rem; display: block; margin-top: 0.3rem; }
+
+    /* Wrap-up */
+    .wrap-up {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 2rem;
+      margin-top: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wrap-up::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--pink), var(--purple), var(--cyan));
+    }
+
+    /* Post footer nav */
+    .post-footer-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(180,0,255,0.15);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-link {
+      font-size: 0.78rem;
+      color: var(--dim);
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(122,106,142,0.3);
+      padding-bottom: 2px;
+      transition: all 0.3s;
+    }
+
+    .nav-link:hover { color: var(--pink); border-color: var(--pink); text-shadow: 0 0 8px var(--pink); }
+    .nav-link.pink { color: var(--pink); border-color: rgba(255,45,120,0.35); }
+    .nav-link.pink:hover { color: #fff; border-color: var(--pink); }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      border-top: 1px solid rgba(180,0,255,0.1);
+    }
+
+    .footer-name {
+      font-family: 'VT323', monospace;
+      font-size: 1.4rem;
+      color: var(--pink);
+      letter-spacing: 0.3em;
+      text-shadow: 0 0 12px rgba(255,45,120,0.4);
+      margin-bottom: 0.4rem;
+    }
+
+    .footer-sub { font-size: 0.7rem; color: rgba(122,106,142,0.5); letter-spacing: 0.1em; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0.85rem 1.25rem; }
+      .nav-links { gap: 1rem; }
+      .nav-links a { font-size: 0.65rem; letter-spacing: 0.1em; }
+      .cvss-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="../index.html" class="nav-logo">SJ_</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#about">PROFILE</a></li>
+      <li><a href="../index.html#certs">CLEARANCE</a></li>
+      <li><a href="../index.html#projects">CASE FILES</a></li>
+      <li><a href="index.html" class="active">TRANSMISSIONS</a></li>
+      <li><a href="../field-notes/index.html">FIELD NOTES</a></li>
+      <li><a href="../index.html#contact">COMMS</a></li>
+    </ul>
+  </nav>
+
+  <div class="article-wrap">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="index.html">TRANSMISSIONS</a>
+      <span>/</span>
+      TRANSMISSION // 001
+    </div>
+
+    <!-- Post Header -->
+    <header class="post-header">
+      <div class="post-meta-top">
+        <span class="post-num">TRANSMISSION // 001</span>
+        <span class="post-cat">CYBERSECURITY</span>
+        <span class="post-date">SEP 25, 2025</span>
+      </div>
+      <h1 class="post-title">FROM THEORY TO PRACTICE: MY FIRST HANDS-ON EXPERIENCE WITH VULNERABILITY SCANNING</h1>
+      <p class="post-subtitle">Setting up OpenVAS, running my first scan, and coming face-to-face with a CVSS 10.0 — because nothing makes concepts stick like actually doing the thing.</p>
+      <div class="post-tags">
+        <span class="tag">OPENVAS</span>
+        <span class="tag">VULNERABILITY SCANNING</span>
+        <span class="tag">CVE</span>
+        <span class="tag">CVSS</span>
+        <span class="tag">DOCKER</span>
+        <span class="tag">LINUX</span>
+        <span class="tag">SOC</span>
+      </div>
+    </header>
+
+    <!-- Article Body -->
+    <div class="post-body">
+
+      <h2>WHAT IS VULNERABILITY SCANNING?</h2>
+
+      <p>Vulnerability scanning is the inspection of digital systems to find weaknesses — and it's an important compliance requirement of many regulatory bodies.</p>
+
+      <div class="callout">
+        <div class="callout-label">// ANALOGY</div>
+        Think of it like walking through your home and checking for ways an intruder could get in:<br><br>
+        <strong>A window without bars or locks</strong> = an open port with no protections.<br>
+        <strong>A cracked wall</strong> = outdated software with known bugs.<br>
+        <strong>A flimsy door</strong> = weak passwords.<br><br>
+        Patching is like adding locks, repairing cracks, or installing gates to make the house safer.
+      </div>
+
+      <p>Another way to think about it: it's like running a diagnostic scan on your car — low tire pressure, bad brakes, a check engine light. You fix the problems before the car breaks down or becomes unsafe.</p>
+
+      <h2>TYPES OF VULNERABILITY SCANS</h2>
+
+      <div class="scan-type">
+        <div class="scan-type-name">AUTHENTICATED SCAN</div>
+        <div class="scan-type-desc">Requires the subject host's credentials. More detailed — identifies vulnerabilities that can be exploited by attackers who already have access to the host. Provides deeper visibility into configuration and installed applications. <em>Example: scanning an internal database by providing its credentials to the vulnerability scanner.</em></div>
+      </div>
+
+      <div class="scan-type">
+        <div class="scan-type-name">UNAUTHENTICATED SCAN</div>
+        <div class="scan-type-desc">Does not require credentials — all that's needed is an IP address or network range. Identifies vulnerabilities exploitable by an external attacker with no access to the host. Fewer resources, more straightforward setup. <em>Example: scanning a public-facing website for vulnerabilities any user could exploit.</em></div>
+      </div>
+
+      <div class="scan-type">
+        <div class="scan-type-name">INTERNAL SCAN</div>
+        <div class="scan-type-desc">Conducted from inside the network. Focuses on vulnerabilities that would be exposed to attackers once they're already inside — what can be exploited after a breach.</div>
+      </div>
+
+      <div class="scan-type">
+        <div class="scan-type-name">EXTERNAL SCAN</div>
+        <div class="scan-type-desc">Conducted from outside the network. Focuses on vulnerabilities exposed to attackers from the outside — what's visible before a breach even happens.</div>
+      </div>
+
+      <h2>CVE &amp; CVSS: READING THE RESULTS</h2>
+
+      <p>When you run a vulnerability scan with a tool like OpenVAS, you don't just get a list of problems — each finding is usually tied to a <strong>CVE ID</strong> (Common Vulnerabilities and Exposures). Think of it as the vulnerability's "license plate number" in a global database of known flaws.</p>
+
+      <div class="callout cyan">
+        <div class="callout-label">// CVE FORMAT</div>
+        <strong>CVE-</strong> → prefix marking it as a registered vulnerability<br>
+        <strong>Year</strong> → when the vulnerability was published or discovered<br>
+        <strong>Digits</strong> → a unique identifier, often four or more numbers<br><br>
+        Example: <em>CVE-2023-12345</em> — a flaw published in 2023, entry number 12345.<br>
+        The CVE system is maintained by <strong>MITRE Corporation</strong>, which also develops the ATT&amp;CK framework.
+      </div>
+
+      <p>Alongside CVE IDs, each finding is scored with <strong>CVSS</strong> (Common Vulnerability Scoring System) — a 0–10 scale that tells you how severe a vulnerability is. Together, CVE and CVSS help you prioritize: which ones need patching right away, and which can wait.</p>
+
+      <div class="cvss-grid">
+        <div class="cvss-row low">
+          <div class="cvss-range">0.0 – 3.9</div>
+          <div class="cvss-label low">LOW SEVERITY</div>
+        </div>
+        <div class="cvss-row medium">
+          <div class="cvss-range">4.0 – 6.9</div>
+          <div class="cvss-label medium">MEDIUM SEVERITY</div>
+        </div>
+        <div class="cvss-row high">
+          <div class="cvss-range">7.0 – 8.9</div>
+          <div class="cvss-label high">HIGH SEVERITY</div>
+        </div>
+        <div class="cvss-row crit">
+          <div class="cvss-range">9.0 – 10.0</div>
+          <div class="cvss-label crit">CRITICAL SEVERITY</div>
+        </div>
+      </div>
+
+      <h2>HOW I SET UP OPENVAS</h2>
+
+      <p>I set up OpenVAS in an Ubuntu lab environment. Since OpenVAS runs inside a container, my first step was installing <strong>Docker</strong> — a platform that bundles applications with everything they need to run in lightweight, portable containers.</p>
+
+      <p>Once Docker was ready, I pulled down the <strong>Immauss OpenVAS container</strong>, which made setup much faster than building from scratch. Running the container mapped OpenVAS to port 443, so I could open the web interface at <em>https://127.0.0.1</em>. After logging in with the default credentials, I was greeted by the <strong>Greenbone Security Assistant (GSA)</strong> dashboard — and ready to launch my first scan.</p>
+
+      <div class="inline-terminal">
+        <span class="t-prompt">$</span> <span class="t-cmd">docker run -d -p 443:443 --name openvas immauss/openvas</span>
+        <span class="t-out">// pulling container... mapping port 443... initializing GSA dashboard</span>
+      </div>
+
+      <p>OpenVAS walks you through a handful of setup steps — defining a target, configuring a task, and choosing a scan type. Once those were in place, I hit <strong>Start Scan</strong>.</p>
+
+      <div class="screenshot-block">
+        <img src="../photos/openvas-01-intro.png" alt="Vulnerability scanning illustration">
+        <div class="screenshot-caption"><strong>OVERVIEW //</strong> Vulnerability scanning — inspecting systems to find weaknesses before attackers do.</div>
+      </div>
+
+      <div class="screenshot-block">
+        <img src="../photos/openvas-06-task-config.png" alt="OpenVAS Task Configuration — My First Task">
+        <div class="screenshot-caption"><strong>SCAN CONFIG //</strong> Named "My First Task" — Full and fast scan config, OpenVAS Default scanner, QoD threshold 70%.</div>
+      </div>
+
+      <h2>THE SCAN: RUNNING IT</h2>
+
+      <p>I named it <em>My First Task</em> and chose the "Full and fast" scan config. The scan ran sequentially across hosts with overrides applied. The status bar crept up from 2%... and I waited.</p>
+
+      <div class="screenshot-block">
+        <img src="../photos/openvas-02-install-docker.png" alt="Terminal: sudo apt install docker.io">
+        <div class="screenshot-caption"><strong>STEP 1 //</strong> Installing Docker — the platform that runs the OpenVAS container.</div>
+      </div>
+
+      <div class="screenshot-block">
+        <img src="../photos/openvas-03-run-container.png" alt="Terminal: docker run command">
+        <div class="screenshot-caption"><strong>STEP 2 //</strong> Pulling and running the Immauss OpenVAS container, mapped to port 443.</div>
+      </div>
+
+      <div class="screenshot-block">
+        <img src="../photos/openvas-04-start-container.png" alt="Terminal: sudo docker start openvas">
+        <div class="screenshot-caption"><strong>STEP 3 //</strong> Starting the container.</div>
+      </div>
+
+      <div class="screenshot-block">
+        <img src="../photos/openvas-05-browser-access.png" alt="Browser accessing https://127.0.0.1">
+        <div class="screenshot-caption"><strong>STEP 4 //</strong> Accessing the Greenbone Security Assistant dashboard at https://127.0.0.1.</div>
+      </div>
+
+      <div class="screenshot-block">
+        <img src="../photos/openvas-07-scan-complete.png" alt="Scan Completion — 8 minutes 27 seconds, 26 findings">
+        <div class="screenshot-caption"><strong>SCAN COMPLETE //</strong> Duration: 8 minutes 27 seconds. Total results: 26 findings. 1 report generated.</div>
+      </div>
+
+      <h2>THE RESULTS</h2>
+
+      <p>The scan finished with <strong>26 findings</strong>. The majority were low-severity or informational logs, with 1 medium vulnerability. The dashboard showed a pie chart of severity classes, a bar chart of vulnerabilities by CVSS score, and a word cloud — SSL/TLS came up a lot in mine.</p>
+
+      <div class="screenshot-block">
+        <img src="../photos/openvas-08-results-dashboard.png" alt="Results Dashboard — severity distribution">
+        <div class="screenshot-caption"><strong>RESULTS DASHBOARD //</strong> 24 low-risk findings, 1 medium, 1 critical. Severity visualized across pie chart and CVSS bar chart.</div>
+      </div>
+
+      <h3>THE BIG ONE: CVSS 10.0</h3>
+
+      <p>This was the biggest eye-opener. OpenVAS flagged a <strong>critical vulnerability scoring CVSS 10.0</strong> — the system was running on default credentials (<em>admin:admin</em>).</p>
+
+      <div class="critical-box">
+        <div class="critical-label">🚨 CRITICAL FINDING // CVSS 10.0</div>
+        <div class="critical-row"><strong>Vulnerability:</strong> Default Credentials (admin:admin)</div>
+        <div class="critical-row"><strong>Port:</strong> 9390/tcp</div>
+        <div class="critical-row"><strong>Attack Vector:</strong> Remote (OMP/GMP) — no authentication required</div>
+        <div class="critical-row"><strong>Impact:</strong> Complete system compromise possible</div>
+        <div class="critical-row"><strong>Remediation:</strong> Change the default password immediately. Implement MFA. Restrict network access to management interfaces.</div>
+      </div>
+
+      <div class="screenshot-block">
+        <img src="../photos/openvas-09-critical-finding.png" alt="Critical vulnerability detail — CVSS 10.0 default credentials">
+        <div class="screenshot-caption"><strong>CRITICAL FINDING //</strong> CVSS 10.0 — default credentials flagged on port 9390/tcp. Complete access possible without authentication.</div>
+      </div>
+
+      <div class="callout purple">
+        <div class="callout-label">// KEY TAKEAWAY</div>
+        Seeing a CVSS 10 flagged on my very first scan really brought home why default credentials are such a massive risk — and why even "basic" hygiene steps can make or break security. It's a textbook example of why hardening even a fresh install matters.
+      </div>
+
+      <div class="wrap-up">
+        <h2 style="margin-top: 0; border: none; padding: 0; margin-bottom: 1rem; font-size: 1.8rem;">WRAP UP</h2>
+        <p style="margin-bottom: 0;">Running this first vulnerability scan with OpenVAS was such a proud moment. Up until now, most of my cybersecurity learning has been theory — reading about CVEs, CVSS, scanning tools. Finally getting hands-on, setting up the environment, running the scan, and seeing real vulnerabilities pop up — including a critical CVSS 10 — made everything feel real. I can't wait to keep practicing, dive deeper into authenticated scans, and learn how to remediate the issues I find. This is just the beginning. But every lab like this makes me feel one step closer to becoming the security analyst I want to be.</p>
+        <p style="margin-top: 1.25rem; color: var(--dim); font-style: italic; margin-bottom: 0;">Theory is great, but this lab reminded me: nothing beats hands-on practice.</p>
+      </div>
+
+    </div>
+
+    <!-- Post Footer Nav -->
+    <div class="post-footer-nav">
+      <a href="index.html" class="nav-link">← BACK TO TRANSMISSIONS</a>
+      <a href="../openvas_portfolio.html" class="nav-link pink">VIEW FULL CASE FILE →</a>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-name">SJ_</div>
+    <p class="footer-sub">SONOBIA JAMES // TRANSMISSIONS // TRANSMISSION 001</p>
+  </footer>
+
+</body>
+</html>

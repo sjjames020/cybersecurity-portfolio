@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIELD NOTES // SJ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #ff2d78;
+      --purple: #b400ff;
+      --cyan: #00f5ff;
+      --bg: #050508;
+      --text: #f0e6ff;
+      --dim: #7a6a8e;
+      --card-bg: rgba(15, 8, 25, 0.9);
+      --card-border: rgba(180, 0, 255, 0.2);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Share Tech Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image:
+        linear-gradient(rgba(180, 0, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(180, 0, 255, 0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* ==================== NAV ==================== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(5, 5, 8, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 45, 120, 0.18);
+    }
+
+    .nav-logo {
+      font-family: 'VT323', monospace;
+      font-size: 2rem;
+      color: var(--pink);
+      text-shadow: 0 0 18px var(--pink), 0 0 40px rgba(255,45,120,0.4);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.75rem;
+      color: var(--dim);
+      text-decoration: none;
+      letter-spacing: 0.2em;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--pink); text-shadow: 0 0 10px var(--pink); }
+    .nav-links a.active { color: var(--pink); text-shadow: 0 0 10px var(--pink); }
+
+    /* ==================== MAIN ==================== */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8rem 2rem 4rem;
+    }
+
+    .lock-wrap {
+      text-align: center;
+      max-width: 700px;
+    }
+
+    /* Animated lock ring */
+    .lock-ring {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .lock-ring svg {
+      width: 100%;
+      height: 100%;
+      animation: spin 8s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .lock-icon {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+      animation: pulse-glow 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { filter: drop-shadow(0 0 8px var(--pink)); }
+      50% { filter: drop-shadow(0 0 24px var(--pink)) drop-shadow(0 0 48px rgba(255,45,120,0.4)); }
+    }
+
+    .access-label {
+      font-size: 0.75rem;
+      color: var(--pink);
+      letter-spacing: 0.45em;
+      margin-bottom: 1rem;
+      opacity: 0.9;
+    }
+
+    .page-title {
+      font-family: 'VT323', monospace;
+      font-size: clamp(3.5rem, 10vw, 6rem);
+      color: #fff;
+      text-shadow:
+        0 0 20px var(--pink),
+        0 0 50px var(--pink),
+        0 0 100px rgba(255,45,120,0.25);
+      letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    .access-status {
+      display: inline-block;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      padding: 0.4rem 1.25rem;
+      border: 1px solid rgba(255,45,120,0.4);
+      color: var(--pink);
+      background: rgba(255,45,120,0.06);
+      margin-bottom: 2.5rem;
+      animation: status-blink 3s ease-in-out infinite;
+    }
+
+    @keyframes status-blink {
+      0%, 90%, 100% { opacity: 1; }
+      95% { opacity: 0.4; }
+    }
+
+    .lock-desc {
+      font-size: 0.88rem;
+      color: var(--dim);
+      line-height: 1.9;
+      margin-bottom: 2.5rem;
+    }
+
+    .lock-desc .hi { color: var(--cyan); }
+    .lock-desc .hi-pink { color: var(--pink); }
+
+    /* Terminal preview */
+    .terminal-preview {
+      background: #040208;
+      border: 1px solid rgba(255,45,120,0.2);
+      border-radius: 4px;
+      padding: 1.5rem;
+      text-align: left;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 0 30px rgba(255,45,120,0.05);
+    }
+
+    .term-topbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(255,45,120,0.1);
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.r { background: #ef4444; }
+    .dot.y { background: #f59e0b; }
+    .dot.g { background: #22c55e; }
+    .term-title { color: var(--dim); font-size: 0.75rem; margin-left: 6px; }
+
+    .t-line { font-size: 0.83rem; margin-bottom: 0.5rem; }
+    .t-prompt { color: var(--pink); }
+    .t-cmd { color: var(--text); }
+    .t-out { color: #7a6a8e; padding-left: 1.5rem; }
+    .t-pending { color: var(--cyan); padding-left: 1.5rem; }
+
+    /* What's coming */
+    .coming-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .coming-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 1.25rem;
+      text-align: left;
+      opacity: 0.6;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .coming-item::before {
+      content: 'LOCKED';
+      position: absolute;
+      top: 0.5rem; right: 0.75rem;
+      font-size: 0.6rem;
+      color: var(--pink);
+      letter-spacing: 0.2em;
+      opacity: 0.5;
+    }
+
+    .coming-num {
+      font-size: 0.65rem;
+      color: var(--pink);
+      letter-spacing: 0.3em;
+      margin-bottom: 0.5rem;
+    }
+
+    .coming-title {
+      font-family: 'VT323', monospace;
+      font-size: 1.2rem;
+      color: var(--dim);
+      line-height: 1.3;
+    }
+
+    .back-link {
+      display: inline-block;
+      font-size: 0.78rem;
+      color: var(--dim);
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(122,106,142,0.3);
+      padding-bottom: 2px;
+      transition: all 0.3s;
+    }
+
+    .back-link:hover {
+      color: var(--pink);
+      border-color: var(--pink);
+      text-shadow: 0 0 10px var(--pink);
+    }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid rgba(180,0,255,0.1);
+    }
+
+    .footer-sub {
+      font-size: 0.7rem;
+      color: rgba(122,106,142,0.45);
+      letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 0.85rem 1.25rem; }
+      .nav-links { gap: 1rem; }
+      .nav-links a { font-size: 0.65rem; letter-spacing: 0.1em; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="../index.html" class="nav-logo">SJ_</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#about">PROFILE</a></li>
+      <li><a href="../index.html#certs">CLEARANCE</a></li>
+      <li><a href="../index.html#projects">CASE FILES</a></li>
+      <li><a href="../transmissions/index.html">TRANSMISSIONS</a></li>
+      <li><a href="index.html" class="active">FIELD NOTES</a></li>
+      <li><a href="../index.html#contact">COMMS</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="lock-wrap">
+
+      <!-- Spinning ring + lock icon -->
+      <div class="lock-ring">
+        <svg viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="70" cy="70" r="64" stroke="rgba(255,45,120,0.15)" stroke-width="1"/>
+          <circle cx="70" cy="70" r="64" stroke="url(#ringGrad)" stroke-width="1.5"
+            stroke-dasharray="12 8" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="140" y2="140" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ff2d78"/>
+              <stop offset="50%" stop-color="#b400ff"/>
+              <stop offset="100%" stop-color="#00f5ff"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="lock-icon">🔒</div>
+      </div>
+
+      <p class="access-label">&gt; CHANNEL STATUS // STANDBY</p>
+      <h1 class="page-title">FIELD NOTES</h1>
+      <span class="access-status">◈ AWAITING DEPLOYMENT</span>
+
+      <p class="lock-desc">
+        This channel activates when I land my <span class="hi-pink">first role in cybersecurity</span>.<br>
+        What you'll find here: <span class="hi">real talk from inside the industry</span> — lessons from the job, things school didn't teach me, and dispatches from the front lines of a career in the making.
+        <br><br>
+        Check back. It's coming.
+      </p>
+
+      <!-- Terminal -->
+      <div class="terminal-preview">
+        <div class="term-topbar">
+          <div class="dot r"></div>
+          <div class="dot y"></div>
+          <div class="dot g"></div>
+          <span class="term-title">sj@cybergirl:~$ field-notes --status</span>
+        </div>
+        <div class="t-line"><span class="t-prompt">$</span> <span class="t-cmd">ls field-notes/</span></div>
+        <div class="t-line t-out">// no entries yet — channel not yet active</div>
+        <div class="t-line" style="margin-top: 0.75rem"><span class="t-prompt">$</span> <span class="t-cmd">cat roadmap.txt</span></div>
+        <div class="t-line t-pending">◈ land first cybersecurity role</div>
+        <div class="t-line t-pending">◈ write about what no one told me</div>
+        <div class="t-line t-pending">◈ document the real learning curve</div>
+        <div class="t-line t-pending">◈ share tools, workflows, and hard-won wisdom</div>
+        <div class="t-line" style="margin-top: 0.75rem"><span class="t-prompt">$</span> <span class="t-cmd">status --eta</span></div>
+        <div class="t-line" style="padding-left: 1.5rem; color: #ff2d78">▶ SOONER THAN YOU THINK.</div>
+      </div>
+
+      <!-- Locked preview cards -->
+      <div class="coming-grid">
+        <div class="coming-item">
+          <div class="coming-num">NOTE // 001</div>
+          <div class="coming-title">WHAT MY FIRST WEEK ACTUALLY LOOKED LIKE</div>
+        </div>
+        <div class="coming-item">
+          <div class="coming-num">NOTE // 002</div>
+          <div class="coming-title">TOOLS I WISH I'D LEARNED SOONER</div>
+        </div>
+        <div class="coming-item">
+          <div class="coming-num">NOTE // 003</div>
+          <div class="coming-title">BRIDGING THE CERT-TO-JOB GAP</div>
+        </div>
+      </div>
+
+      <a href="../transmissions/index.html" class="back-link">← READ TRANSMISSIONS WHILE YOU WAIT</a>
+
+    </div>
+  </main>
+
+  <footer>
+    <p class="footer-sub">SONOBIA JAMES // FIELD NOTES // CHANNEL PENDING ACTIVATION</p>
+  </footer>
+
+</body>
+</html>
